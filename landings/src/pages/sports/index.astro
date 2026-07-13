@@ -37,14 +37,14 @@ const description =
             <span class="icon" aria-hidden="true">{s.emoji}</span>
             <h3>{s.name}</h3>
             <p>{s.tagline}</p>
-            <span class="go">{s.short} club management →</span>
+            <span class="go">{s.short} club management&nbsp;→</span>
           </a>
         ))}
         <div class="sport-card more">
           <span class="icon" aria-hidden="true">➕</span>
           <h3>Your sport</h3>
           <p>Football, GAA, hockey, swimming, tennis, rugby, basketball — any amateur club.</p>
-          <a class="go" href="/#waitlist">Start your club →</a>
+          <a class="go" href="/#waitlist">Start your club&nbsp;→</a>
         </div>
       </div>
       <p class="microcopy center-note">
@@ -83,7 +83,7 @@ const description =
   .sport-card .icon { font-size: 2.2rem; }
   .sport-card h3 { font-size: 1.15rem; margin: 0.4rem 0 0.2rem; }
   .sport-card p { font-size: 0.9rem; margin: 0 0 var(--space-2); }
-  .sport-card .go { margin-top: auto; font-weight: 700; font-size: 0.85rem; color: var(--color-accent-strong); }
+  .sport-card .go { margin-top: auto; font-weight: 700; font-size: 0.85rem; color: var(--color-accent-strong); text-wrap: pretty; }
   .sport-card.more { border-style: dashed; }
 
   .microcopy { font-size: 0.9rem; font-weight: 600; color: var(--color-text-muted); }
