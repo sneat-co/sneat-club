@@ -1,0 +1,91 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SPORTS } from "../../data/sports.js";
+
+const title = "Sports — free club management software for every game — Sneat Club";
+const description =
+  "Free club management software for every amateur sport: running, cycling, badminton and any club. Members, rosters, memberships, schedules, attendance and subs in one home. Sneat Club, part of the Sneat platform.";
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <p class="kicker">Sneat Club · sports</p>
+      <h1>Free club management software for <span class="accent">every sport.</span></h1>
+      <p class="lede">
+        The same club spine runs every amateur sport — Sneat Club just speaks your sport's
+        language. Pick your sport to see how it fits, or start your club today.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/#waitlist">Start your club — free</a>
+        <a class="btn btn-secondary" href="/app">Try the app preview</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sports list -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center section-head">
+        <p class="eyebrow">Choose your sport</p>
+        <h2>Club management software, made for your game</h2>
+      </div>
+      <div class="grid grid-4 sports-grid">
+        {SPORTS.map((s) => (
+          <a class="sport-card" href={`/sports/${s.slug}`}>
+            <span class="icon" aria-hidden="true">{s.emoji}</span>
+            <h3>{s.name}</h3>
+            <p>{s.tagline}</p>
+            <span class="go">{s.short} club management →</span>
+          </a>
+        ))}
+        <div class="sport-card more">
+          <span class="icon" aria-hidden="true">➕</span>
+          <h3>Your sport</h3>
+          <p>Football, GAA, hockey, swimming, tennis, rugby, basketball — any amateur club.</p>
+          <a class="go" href="/#waitlist">Start your club →</a>
+        </div>
+      </div>
+      <p class="microcopy center-note">
+        Don't see your sport? Sneat Club isn't sport-specific — it runs any community sports club
+        just the same. <a href="/#waitlist">Bring yours on board →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: linear-gradient(160deg, var(--hero-1), var(--hero-2));
+    padding-block: var(--space-5);
+    text-align: center;
+  }
+  .kicker { font-weight: 700; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-strong); margin-bottom: var(--space-1); }
+  .hero h1 { font-size: clamp(2rem, 5.5vw, 3.2rem); max-width: 16ch; margin-inline: auto; }
+  .accent { color: var(--color-accent); }
+  .lede { max-width: 60ch; margin: var(--space-2) auto var(--space-3); font-size: clamp(1.05rem, 2.2vw, 1.25rem); color: var(--color-text-muted); }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center; }
+
+  .sports-grid { align-items: stretch; }
+  .sport-card {
+    display: flex; flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    box-shadow: var(--shadow);
+    color: var(--color-text);
+    height: 100%;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  a.sport-card:hover { text-decoration: none; transform: translateY(-3px); border-color: var(--color-accent); }
+  .sport-card .icon { font-size: 2.2rem; }
+  .sport-card h3 { font-size: 1.15rem; margin: 0.4rem 0 0.2rem; }
+  .sport-card p { font-size: 0.9rem; margin: 0 0 var(--space-2); }
+  .sport-card .go { margin-top: auto; font-weight: 700; font-size: 0.85rem; color: var(--color-accent-strong); }
+  .sport-card.more { border-style: dashed; }
+
+  .microcopy { font-size: 0.9rem; font-weight: 600; color: var(--color-text-muted); }
+  .center-note { text-align: center; margin-top: var(--space-3); }
+</style>
