@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sneat-club",
+  "compatibility_date": "2026-06-23",
+  "workers_dev": true,
+  // www -> apex is handled by a zone-level Cloudflare **Redirect Rule**
+  // (Rules -> Redirect Rules): www.sneat.club/* -> https://sneat.club/<path> (301),
+  // which runs at the edge before origin. www is deliberately NOT a worker
+  // route here: attaching www as a second custom domain conflicts with a
+  // proxied www record (error 100117). The worker owns the apex only.
+  "assets": { "directory": "./dist" },
+  // sneat.club is attached to this worker as a Cloudflare **Custom Domain**
+  // (Cloudflare manages the proxied DNS record + TLS cert). Creating/attaching
+  // a custom domain requires the deploy token to carry Zone:DNS:Edit for the
+  // sneat.club zone — a plain `workers`-only token cannot create it.
+  "routes": [
+    { "pattern": "sneat.club", "custom_domain": true }
+  ]
+}

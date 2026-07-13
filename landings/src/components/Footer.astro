@@ -1,0 +1,65 @@
+---
+const year = 2026;
+---
+
+<footer class="site-footer">
+  <div class="container cols">
+    <div class="brand-col">
+      <a href="/" class="brand" aria-label="Sneat Club home"
+        >Sneat&nbsp;<span class="mark">Club</span></a
+      >
+      <p>The operating home for community sports clubs — teams, rosters, memberships, schedules, communication and attendance, on one shared graph.</p>
+    </div>
+
+    <nav class="col" aria-label="Product">
+      <h3>Product</h3>
+      <ul>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#platform">The platform</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="/app">App preview</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+    </nav>
+
+    <nav class="col" aria-label="Ecosystem">
+      <h3>Sports ecosystem</h3>
+      <ul>
+        <li><a href="https://gameboard.live" target="_blank" rel="noopener">GameBoard.live — live scoring</a></li>
+        <li><a href="https://matchups.center" target="_blank" rel="noopener">MatchUps.center — competitions</a></li>
+        <li><a href="https://sneat.co/sport" target="_blank" rel="noopener">Sneat Sport — the vertical</a></li>
+        <li><a href="https://sneat.co" target="_blank" rel="noopener">Sneat platform</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container legal">
+    <p>&copy; {year} Sneat Club · built on the Sneat platform · your club, finally in one place.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-soft);
+    padding-block: var(--space-4) var(--space-2);
+    margin-top: var(--space-5);
+  }
+  .cols { display: grid; gap: var(--space-3); grid-template-columns: 1fr; }
+  .brand { font-weight: 800; font-size: 1.15rem; color: var(--color-text); }
+  .brand:hover { text-decoration: none; }
+  .mark { color: var(--color-accent); }
+  .col h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-1);
+  }
+  .col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+  .col a { color: var(--color-text-muted); font-weight: 500; }
+  .col a:hover { color: var(--color-text); }
+  .legal { margin-top: var(--space-3); padding-top: var(--space-2); border-top: 1px solid var(--color-border); }
+  .legal p { font-size: 0.85rem; margin: 0; }
+  @media (min-width: 720px) { .cols { grid-template-columns: 2fr 1fr 1fr; } }
+</style>

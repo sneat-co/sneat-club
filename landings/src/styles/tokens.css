@@ -1,0 +1,38 @@
+/*
+ * Sneat Club design tokens — "the operating home for your sports club".
+ * A confident pitch-green primary with a trophy-gold accent on a clean,
+ * light field: the two club notes — the grass a team plays on, and the
+ * silverware it plays for. Deliberately distinct from Motorius's electric
+ * blue/orange cockpit and GameBoard.live's scoreboard contrast.
+ */
+:root {
+  /* Brand — pitch green primary, trophy-gold accent, deep-pine ink */
+  --b-primary: #12a150;         /* pitch green */
+  --b-primary-strong: #0d7d3d;
+  --b-sky: #8fe0ad;
+  --b-accent: #f2a413;          /* trophy gold — the "what you play for" note */
+  --b-accent-soft: #fdecc8;
+  --b-ink: #14231c;             /* deep pine text + footer */
+  --b-muted: #566b60;
+
+  /* Chrome */
+  --b-bg: #f6faf7;
+  --b-surface: #ffffff;
+  --b-soft: #eaf3ed;
+  --b-hero-1: #e6f6ec;
+  --b-hero-2: #d2ecdb;
+  --b-border: #dbe8df;
+  --b-danger: #d64545;
+
+  /* Status pills */
+  --b-live-bg: #d6f2e0;
+  --b-live-ink: #0d7d3d;
+  --b-soon-bg: #eceff0;
+  --b-soon-ink: #566b60;
+
+  /* Type & shape */
+  --b-font-sans: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --b-radius: 16px;
+  --b-radius-pill: 999px;
+  --b-shadow: 0 10px 26px rgba(20, 35, 28, 0.12);
+}

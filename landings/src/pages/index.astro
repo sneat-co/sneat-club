@@ -1,0 +1,271 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const steps = [
+  { icon: "🏟️", title: "Create your club", text: "Name it, set your season, and add your teams — U12s to seniors. Your club is its own space, and you run it." },
+  { icon: "👥", title: "Build the roster", text: "Add players, coaches, parents and volunteers once. Reuse the squad for every game — no re-typing." },
+  { icon: "📣", title: "Register & communicate", text: "A sign-up form that captures members and consents, and announcements that reach the right team, instantly." },
+  { icon: "🗓️", title: "Run the season", text: "Training and games on one calendar, attendance and availability in, and the whole club moving together." },
+];
+
+const platform = [
+  { icon: "🥅", title: "GameBoard.live", role: "Live scoring", text: "Run a live game and a public no-login scoreboard; followers get the score. Sneat Club holds the team it plays for." },
+  { icon: "🏆", title: "MatchUps.center", role: "Competitions", text: "Leagues, cups, fixtures and standings — your teams enter as competitors and results flow back to their profiles." },
+  { icon: "📅", title: "Bookius", role: "Facilities", text: "Book courts, halls, pitches and coach sessions against real availability — reservations, not a spreadsheet." },
+  { icon: "✅", title: "RSVP.express", role: "Attendance", text: "Invites, RSVPs and availability for games and training feed straight into the roster and the coach's line-up." },
+  { icon: "📏", title: "Sizeus", role: "Kit & gear", text: "Player sizes per team export as a kit sheet — order jerseys, shorts, socks and boots for the whole squad in one go." },
+  { icon: "💶", title: "Debtus · Budgetus", role: "Money", text: "Membership dues, match fees, coach pay and the season budget — tracked where the members already live." },
+  { icon: "⏰", title: "Remindius", role: "Nudges", text: "\"Subs due\", \"you're on Saturday's roster\", \"renew your registration\" — reminders over the club's own graph." },
+  { icon: "🧩", title: "Contactius · Calendarius", role: "The graph", text: "People, relationships and the club calendar are shared platform primitives — never re-invented per app." },
+];
+
+const why = [
+  { icon: "🏟️", title: "Your club, one home" },
+  { icon: "♻️", title: "Enter people once" },
+  { icon: "🔗", title: "Plugs in, doesn't rebuild" },
+  { icon: "🛡️", title: "Minor-safe by design" },
+  { icon: "🔒", title: "You own your data" },
+  { icon: "🆓", title: "Free to start" },
+];
+
+const roadmap = [
+  { phase: "1", title: "Club & team management", text: "Clubs, teams, seasons, rosters and roles — the org spine.", now: true },
+  { phase: "2", title: "Registration & membership", text: "Sign-up funnel, season memberships, consents and the parent–child bridge." },
+  { phase: "3", title: "Communication & attendance", text: "Team announcements, attendance and availability, reminders." },
+  { phase: "4", title: "Training & facilities", text: "Training groups, session scheduling, court & coach bookings, kit sizing." },
+  { phase: "5", title: "Money", text: "Membership dues, match fees, coach pay and season budgets." },
+  { phase: "6", title: "Competitions", text: "Host and enter leagues & cups; results and standings on team profiles." },
+];
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <p class="kicker">Sneat Sport · the club & team platform</p>
+      <h1>The operating home for <span class="accent">your sports club.</span></h1>
+      <p class="lede">
+        Clubs, teams, players, parents, coaches and volunteers — <strong>Sneat Club</strong>
+        keeps your whole organisation in one place: rosters, memberships, registration,
+        schedules, communication and attendance. Live scoring, competitions, bookings and
+        payments plug in — they're not rebuilt.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#waitlist">Start a club</a>
+        <a class="btn btn-secondary" href="/app">See the app preview</a>
+      </div>
+      <p class="microcopy">🏟️ Teams & rosters · 🛡️ Minor-safe · 🔒 Privacy-first · 🆓 Free to start</p>
+    </div>
+  </section>
+
+  <!-- Problem framing -->
+  <section class="section problem">
+    <div class="container text-center section-head">
+      <p class="eyebrow">The game is the easy part.</p>
+      <h2>Running a club lives in a dozen group chats, spreadsheets and a shoebox of forms.</h2>
+      <p>
+        The roster is in one chat, the subs are in a spreadsheet, the consent forms are on
+        paper, and nobody's sure who's playing Saturday. Sneat Club gathers the whole club
+        into one clear home — so the squad enters once, everyone hears the same message, and
+        you can finally answer "who's a member, who's playing, and who's paid?".
+      </p>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how-it-works" class="section soft">
+    <div class="container">
+      <div class="text-center section-head">
+        <p class="eyebrow">How it works</p>
+        <h2>From group-chat chaos to one clubhouse</h2>
+      </div>
+      <div class="grid grid-4">
+        {steps.map((s) => (
+          <article class="step">
+            <span class="icon" aria-hidden="true">{s.icon}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- The platform / integrations -->
+  <section id="platform" class="section">
+    <div class="container">
+      <div class="text-center section-head">
+        <p class="eyebrow">One hub, the specialists plugged in</p>
+        <h2>Sneat Club owns the club — and connects the rest</h2>
+        <p>
+          Sneat Club holds the durable stuff: your teams, seasons, rosters, roles and members.
+          Everything a club <em>does</em> is handled by a purpose-built part of the Sneat
+          ecosystem — so nothing is re-typed and nothing is a silo.
+        </p>
+      </div>
+      <div class="grid grid-4">
+        {platform.map((p) => (
+          <article class="feature">
+            <span class="icon" aria-hidden="true">{p.icon}</span>
+            <span class="role-pill">{p.role}</span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section id="why" class="section soft">
+    <div class="container">
+      <div class="text-center section-head">
+        <p class="eyebrow">Why Sneat Club</p>
+        <h2>A club, handled</h2>
+      </div>
+      <div class="grid grid-3 why-grid">
+        {why.map((w) => (
+          <div class="why-item">
+            <span class="icon" aria-hidden="true">{w.icon}</span>
+            <span class="why-title">{w.title}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Roadmap -->
+  <section id="roadmap" class="section">
+    <div class="container">
+      <div class="text-center section-head">
+        <p class="eyebrow">Where it's going</p>
+        <h2>From a club that runs itself → a community sports platform</h2>
+      </div>
+      <ol class="roadmap">
+        {roadmap.map((r) => (
+          <li class={r.now ? "road now" : "road"}>
+            <span class="phase">{r.phase}</span>
+            <div>
+              <h3>{r.title} {r.now && <span class="now-pill">building now</span>}</h3>
+              <p>{r.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Ecosystem -->
+  <section id="ecosystem" class="section soft">
+    <div class="container text-center section-head">
+      <p class="eyebrow">Part of Sneat Sport</p>
+      <h2>The management layer under the live game</h2>
+      <p>
+        A game is the front door — a no-login live scoreboard people share and follow on
+        <a href="https://gameboard.live" target="_blank" rel="noopener">GameBoard.live</a>.
+        Sneat Club is the durable home the followed teams and players live in, and
+        <a href="https://matchups.center" target="_blank" rel="noopener">MatchUps.center</a>
+        is where their competitions run. One club graph, three surfaces.
+      </p>
+      <p class="ecosystem-links">
+        <a href="https://sneat.co/sport" target="_blank" rel="noopener">Explore Sneat Sport →</a>
+        &nbsp;·&nbsp;
+        <a href="https://sneat.co" target="_blank" rel="noopener">About the Sneat platform →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Waitlist CTA -->
+  <section id="waitlist" class="section">
+    <div class="container text-center section-head">
+      <p class="eyebrow">Early access</p>
+      <h2>Bring your club on board</h2>
+      <p>
+        Sneat Club is being built now. Join the waitlist and we'll tell you the moment you can
+        create your club and add your first team — free.
+      </p>
+      <div class="cta-row center">
+        <a class="btn btn-primary" href="mailto:hello@sneat.co?subject=Join%20the%20Sneat%20Club%20waitlist&body=Count%20my%20club%20in%20for%20early%20access%20to%20Sneat%20Club.">Join the waitlist</a>
+        <a class="btn btn-secondary" href="/app">Try the app preview</a>
+      </div>
+      <p class="microcopy">We'll only email you about Sneat Club. No spam, ever.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: linear-gradient(160deg, var(--hero-1), var(--hero-2));
+    padding-block: var(--space-5);
+    text-align: center;
+  }
+  .kicker {
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-1);
+  }
+  .hero h1 { font-size: clamp(2.1rem, 6vw, 3.4rem); max-width: 16ch; margin-inline: auto; }
+  .accent { color: var(--color-accent); }
+  .lede {
+    max-width: 62ch;
+    margin: var(--space-2) auto var(--space-3);
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    color: var(--color-text-muted);
+  }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center; }
+  .cta-row.center { margin-top: var(--space-2); }
+  .microcopy { margin-top: var(--space-2); font-size: 0.9rem; font-weight: 600; color: var(--color-text-muted); }
+
+  .step, .feature {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    box-shadow: var(--shadow);
+    height: 100%;
+  }
+  .step .icon, .feature .icon { font-size: 2rem; }
+  .step h3, .feature h3 { font-size: 1.1rem; margin: 0.5rem 0 0.3rem; }
+  .step p, .feature p { font-size: 0.9rem; margin: 0; }
+
+  .role-pill {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background: var(--pill-live-bg);
+    color: var(--pill-live-ink);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .why-grid { gap: var(--space-2); }
+  .why-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 0.7rem 1.1rem;
+    font-weight: 700;
+    box-shadow: var(--shadow);
+  }
+  .why-item .icon { font-size: 1.3rem; }
+  .why-title { font-size: 0.95rem; }
+
+  .roadmap { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); max-width: 760px; margin-inline: auto; }
+  .road { display: flex; gap: var(--space-2); align-items: flex-start; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--space-2) var(--space-3); box-shadow: var(--shadow); }
+  .road.now { border-color: var(--color-accent); }
+  .road .phase { flex: none; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--color-accent); color: #fff; font-weight: 800; }
+  .road h3 { font-size: 1.05rem; margin: 0 0 0.2rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .road p { font-size: 0.9rem; margin: 0; }
+  .now-pill { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; background: var(--pill-live-bg); color: var(--pill-live-ink); padding: 0.12rem 0.5rem; border-radius: var(--radius-pill); }
+
+  .ecosystem-links { margin-top: var(--space-2); font-weight: 600; }
+</style>

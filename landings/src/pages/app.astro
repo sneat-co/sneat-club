@@ -1,0 +1,251 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="App preview — Sneat Club"
+  description="A draft, in-browser preview of the Sneat Club app: create a club, add teams, and build a season roster. Nothing leaves your browser."
+>
+  <section class="section app-shell">
+    <div class="container">
+      <div class="preview-banner">
+        <strong>Draft preview.</strong> This is an early, in-browser prototype of the Sneat
+        Club app — no account, no server. Everything you enter stays in <em>this browser</em>
+        (localStorage) and demonstrates the core model: <b>Club → Teams → Roster</b>. The real
+        app signs you in and runs on the shared Sneat graph.
+        <button id="reset" type="button" class="reset">Reset demo</button>
+      </div>
+
+      <header class="app-head">
+        <div>
+          <p class="eyebrow" id="season-label">Season 2026/27</p>
+          <h1 id="club-name">Your club</h1>
+          <p id="club-sub" class="muted">Create your club to begin.</p>
+        </div>
+        <div class="stat-row" id="stats" hidden>
+          <div class="stat"><span id="stat-teams">0</span><small>Teams</small></div>
+          <div class="stat"><span id="stat-players">0</span><small>Players</small></div>
+          <div class="stat"><span id="stat-coaches">0</span><small>Coaches</small></div>
+        </div>
+      </header>
+
+      <!-- Step 1: create club -->
+      <section id="create-club" class="card">
+        <h2>1 · Create your club</h2>
+        <form id="club-form" class="row">
+          <input id="club-input" type="text" placeholder="e.g. Limerick Celtics" autocomplete="off" required />
+          <input id="season-input" type="text" placeholder="Season (e.g. 2026/27)" value="2026/27" autocomplete="off" />
+          <button class="btn btn-primary" type="submit">Create club</button>
+        </form>
+      </section>
+
+      <!-- Step 2: teams + rosters -->
+      <section id="workspace" hidden>
+        <div class="add-team card">
+          <h2>2 · Add a team</h2>
+          <form id="team-form" class="row">
+            <input id="team-input" type="text" placeholder="e.g. U14 Girls" autocomplete="off" required />
+            <button class="btn btn-primary" type="submit">Add team</button>
+          </form>
+        </div>
+
+        <div id="teams" class="teams"></div>
+      </section>
+
+      <p class="footnote">
+        Like what you see? <a href="/#waitlist">Join the waitlist</a> — the full app adds
+        registration, memberships, communication, attendance, and plug-ins for live scoring,
+        competitions, bookings and payments.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var KEY = "sneat-club-demo-v1";
+    var $ = function (id) { return document.getElementById(id); };
+    var ROLES = ["Player", "Coach", "Guardian", "Volunteer"];
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; }
+    }
+    function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+
+    var state = load();
+
+    function esc(t) {
+      return String(t).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function counts() {
+      var players = 0, coaches = 0;
+      (state.teams || []).forEach(function (t) {
+        (t.roster || []).forEach(function (p) {
+          if (p.role === "Coach") coaches++; else if (p.role === "Player") players++;
+        });
+      });
+      return { teams: (state.teams || []).length, players: players, coaches: coaches };
+    }
+
+    function render() {
+      var hasClub = !!(state && state.club);
+      $("create-club").hidden = hasClub;
+      $("workspace").hidden = !hasClub;
+      $("stats").hidden = !hasClub;
+      if (!hasClub) return;
+
+      $("club-name").textContent = state.club;
+      $("season-label").textContent = "Season " + (state.season || "2026/27");
+      var c = counts();
+      $("club-sub").textContent = c.teams
+        ? c.teams + " team" + (c.teams === 1 ? "" : "s") + " · " + c.players + " players · " + c.coaches + " coaches"
+        : "Add your first team below.";
+      $("stat-teams").textContent = c.teams;
+      $("stat-players").textContent = c.players;
+      $("stat-coaches").textContent = c.coaches;
+
+      var wrap = $("teams");
+      wrap.innerHTML = "";
+      (state.teams || []).forEach(function (team, ti) {
+        var card = document.createElement("div");
+        card.className = "team card";
+        var rosterRows = (team.roster || []).map(function (p, pi) {
+          var num = p.role === "Player" ? '<span class="jersey">' + (p.number || "–") + "</span>" : '<span class="jersey ghost">' + p.role.charAt(0) + "</span>";
+          return '<li>' + num + '<span class="pname">' + esc(p.name) + '</span>' +
+            '<span class="prole role-' + p.role.toLowerCase() + '">' + p.role + '</span>' +
+            '<button class="link-del" data-t="' + ti + '" data-p="' + pi + '" title="Remove">✕</button></li>';
+        }).join("");
+        card.innerHTML =
+          '<div class="team-head"><h3>' + esc(team.name) + '</h3>' +
+          '<button class="link-del team-del" data-t="' + ti + '" title="Remove team">Remove team</button></div>' +
+          '<ul class="roster">' + (rosterRows || '<li class="empty">No players yet — add your first below.</li>') + '</ul>' +
+          '<form class="add-player row" data-t="' + ti + '">' +
+          '<input class="p-name" type="text" placeholder="Player / coach name" autocomplete="off" required />' +
+          '<input class="p-num" type="text" inputmode="numeric" placeholder="#" maxlength="3" />' +
+          '<select class="p-role">' + ROLES.map(function (r) { return '<option>' + r + "</option>"; }).join("") + "</select>" +
+          '<button class="btn btn-secondary" type="submit">Add</button></form>';
+        wrap.appendChild(card);
+      });
+    }
+
+    $("club-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = $("club-input").value.trim();
+      if (!name) return;
+      state = { club: name, season: ($("season-input").value.trim() || "2026/27"), teams: [] };
+      save(state); render();
+    });
+
+    $("team-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = $("team-input").value.trim();
+      if (!name) return;
+      state.teams.push({ name: name, roster: [] });
+      $("team-input").value = "";
+      save(state); render();
+    });
+
+    $("teams").addEventListener("submit", function (e) {
+      if (!e.target.classList.contains("add-player")) return;
+      e.preventDefault();
+      var ti = +e.target.getAttribute("data-t");
+      var name = e.target.querySelector(".p-name").value.trim();
+      var num = e.target.querySelector(".p-num").value.trim();
+      var role = e.target.querySelector(".p-role").value;
+      if (!name) return;
+      state.teams[ti].roster.push({ name: name, number: num, role: role });
+      save(state); render();
+    });
+
+    $("teams").addEventListener("click", function (e) {
+      var b = e.target.closest(".link-del");
+      if (!b) return;
+      var ti = +b.getAttribute("data-t");
+      if (b.classList.contains("team-del")) {
+        state.teams.splice(ti, 1);
+      } else {
+        var pi = +b.getAttribute("data-p");
+        state.teams[ti].roster.splice(pi, 1);
+      }
+      save(state); render();
+    });
+
+    $("reset").addEventListener("click", function () {
+      if (!confirm("Clear this demo club from your browser?")) return;
+      state = null; try { localStorage.removeItem(KEY); } catch (e) {}
+      render();
+    });
+
+    render();
+  })();
+</script>
+
+<style>
+  .app-shell { padding-top: var(--space-3); }
+  .preview-banner {
+    background: var(--color-accent-soft, #fdecc8);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius);
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.92rem;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+  .preview-banner .reset {
+    margin-left: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 0.2rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .app-head {
+    display: flex; flex-wrap: wrap; gap: var(--space-3);
+    align-items: flex-end; justify-content: space-between;
+    margin-bottom: var(--space-3);
+  }
+  .app-head h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0; }
+  .muted { color: var(--color-text-muted); margin: 0.2rem 0 0; }
+  .stat-row { display: flex; gap: var(--space-2); }
+  .stat { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 0.6rem 1.1rem; text-align: center; box-shadow: var(--shadow); }
+  .stat span { display: block; font-size: 1.5rem; font-weight: 800; color: var(--color-accent-strong); }
+  .stat small { color: var(--color-text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--space-3); box-shadow: var(--shadow); margin-bottom: var(--space-3); }
+  .card h2 { font-size: 1.15rem; margin: 0 0 var(--space-2); }
+  .row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+  .row input[type="text"] { flex: 1 1 200px; }
+  input, select {
+    font: inherit; padding: 0.55rem 0.8rem; border: 1px solid var(--color-border);
+    border-radius: 10px; background: var(--color-bg); color: var(--color-text); min-width: 0;
+  }
+  .p-num { flex: 0 0 4rem; text-align: center; }
+  input:focus, select:focus { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+
+  .teams { display: grid; gap: var(--space-3); grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .teams { grid-template-columns: 1fr 1fr; } }
+  .team-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  .team-head h3 { margin: 0; font-size: 1.15rem; }
+  .roster { list-style: none; margin: 0.5rem 0 var(--space-2); padding: 0; display: grid; gap: 0.35rem; }
+  .roster li { display: flex; align-items: center; gap: 0.6rem; padding: 0.35rem 0.4rem; border-radius: 8px; }
+  .roster li:nth-child(odd) { background: var(--color-soft); }
+  .roster li.empty { color: var(--color-text-muted); font-size: 0.88rem; background: none; }
+  .jersey { flex: none; width: 1.9rem; height: 1.9rem; display: grid; place-items: center; border-radius: 50%; background: var(--color-accent); color: #fff; font-weight: 800; font-size: 0.85rem; }
+  .jersey.ghost { background: var(--color-soft); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+  .pname { flex: 1 1 auto; font-weight: 600; }
+  .prole { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.1rem 0.5rem; border-radius: var(--radius-pill); background: var(--color-soft); color: var(--color-text-muted); }
+  .prole.role-player { background: var(--pill-live-bg); color: var(--pill-live-ink); }
+  .prole.role-coach { background: var(--color-accent-soft, #fdecc8); color: #8a5a00; }
+  .link-del { border: none; background: none; color: var(--color-text-muted); cursor: pointer; font-size: 0.9rem; }
+  .link-del:hover { color: var(--color-danger); }
+  .team-del { font-size: 0.78rem; font-weight: 600; }
+  .add-player { margin-top: 0.4rem; }
+  .add-player .p-name { flex: 1 1 120px; }
+
+  .footnote { margin-top: var(--space-3); text-align: center; color: var(--color-text-muted); font-size: 0.92rem; }
+</style>

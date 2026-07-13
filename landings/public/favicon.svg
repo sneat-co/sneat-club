@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sneat Club">
+  <rect width="64" height="64" rx="14" fill="#12a150"/>
+  <!-- club crest / shield: the team badge -->
+  <path d="M32 12 L50 18 V34 C50 45 42 51 32 54 C22 51 14 45 14 34 V18 Z" fill="#0d7d3d"/>
+  <!-- trophy-gold mark: what the club plays for -->
+  <circle cx="32" cy="30" r="9" fill="none" stroke="#f2a413" stroke-width="4"/>
+  <path d="M32 30 L32 20" stroke="#f2a413" stroke-width="4" stroke-linecap="round"/>
+</svg>
