@@ -187,7 +187,7 @@ const roadmap = [
         </p>
       </div>
       <div class="grid grid-4 sports-grid">
-        {SPORTS.map((s) => (
+        {SPORTS.slice(0, 7).map((s) => (
           <a class="sport-card" href={`/sports/${s.slug}`}>
             <span class="icon" aria-hidden="true">{s.emoji}</span>
             <h3>{s.short}</h3>
