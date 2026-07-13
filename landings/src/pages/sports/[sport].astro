@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { SPORTS } from "../../data/sports.js";
+import { PRODUCTS } from "../../data/products.js";
 
 export function getStaticPaths() {
   return SPORTS.map((s) => ({ params: { sport: s.slug }, props: { sport: s } }));
@@ -66,7 +67,11 @@ const description = `Free ${lc} club management software: members, ${sport.handl
       </p>
       <ul class="plugs">
         {sport.plugs.map((p) => (
-          <li><strong>{p.name}</strong> — {p.text}</li>
+          <li>
+            {PRODUCTS[p.name]
+              ? <a href={PRODUCTS[p.name]} target="_blank" rel="noopener"><strong>{p.name}</strong></a>
+              : <strong>{p.name}</strong>} — {p.text}
+          </li>
         ))}
       </ul>
       <p class="microcopy">…and you never re-type a person, a date or a payment twice.</p>
