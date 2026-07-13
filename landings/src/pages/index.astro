@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { SPORTS } from "../data/sports.js";
 
 const steps = [
   { icon: "🏟️", title: "Create your club", text: "Name it, set your season, and add your teams — U12s to seniors. Your club is its own space, and you run it." },
@@ -45,10 +46,11 @@ const roadmap = [
       <p class="kicker">Sneat Sport · the club & team platform</p>
       <h1>The operating home for <span class="accent">your sports club.</span></h1>
       <p class="lede">
-        Clubs, teams, players, parents, coaches and volunteers — <strong>Sneat Club</strong>
-        keeps your whole organisation in one place: rosters, memberships, registration,
-        schedules, communication and attendance. Live scoring, competitions, bookings and
-        payments plug in — they're not rebuilt.
+        <strong>Free club management software</strong> for community sports. Clubs, teams,
+        players, parents, coaches and volunteers — <strong>Sneat Club</strong> keeps your whole
+        organisation in one place: rosters, memberships, registration, schedules, communication
+        and attendance. Live scoring, competitions, bookings and payments plug in — they're not
+        rebuilt.
       </p>
       <div class="cta-row">
         <a class="btn btn-primary" href="#waitlist">Start a club</a>
@@ -116,6 +118,45 @@ const roadmap = [
     </div>
   </section>
 
+  <!-- Members & Sneat.app -->
+  <section id="members" class="section">
+    <div class="container">
+      <div class="text-center section-head">
+        <p class="eyebrow">Works with Sneat.app</p>
+        <h2>Members bring their own Sneat — no form filled twice</h2>
+        <p>
+          Your players, parents and coaches don't get yet another login to dread. Anyone in the
+          club can use <a href="https://sneat.app" target="_blank" rel="noopener">Sneat.app</a>
+          on their own side, and because the club and its members share <strong>one graph</strong>,
+          data flows between them with consent — entered once, never re-typed.
+        </p>
+      </div>
+      <div class="grid grid-4">
+        <article class="feature">
+          <span class="icon" aria-hidden="true">📅</span>
+          <h3>Calendars in sync</h3>
+          <p>Training and games land straight in each member's own Sneat calendar — change a time once and everyone's updates.</p>
+        </article>
+        <article class="feature">
+          <span class="icon" aria-hidden="true">🔁</span>
+          <h3>Enter data once</h3>
+          <p>A parent fills their child's details once in their family space; the club sees what they choose to share, not a re-typed form.</p>
+        </article>
+        <article class="feature">
+          <span class="icon" aria-hidden="true">📏</span>
+          <h3>Members share what they want</h3>
+          <p>Kit sizes, emergency contacts, medical notes — shared to the club with consent, and kept current by the member, not the secretary.</p>
+        </article>
+        <article class="feature">
+          <span class="icon" aria-hidden="true">🔒</span>
+          <h3>Their data stays theirs</h3>
+          <p>Members control what the club can see, and when they leave the club, their personal details leave with them.</p>
+        </article>
+      </div>
+      <p class="microcopy center-note">This is the club↔family bridge — the club graph and the family graph, finally connected.</p>
+    </div>
+  </section>
+
   <!-- Why -->
   <section id="why" class="section soft">
     <div class="container">
@@ -134,8 +175,38 @@ const roadmap = [
     </div>
   </section>
 
+  <!-- Built for your sport -->
+  <section id="sports" class="section">
+    <div class="container">
+      <div class="text-center section-head">
+        <p class="eyebrow">Built for your sport</p>
+        <h2>Free club management software, made for your game</h2>
+        <p>
+          The same club spine runs every amateur sport — Sneat Club just speaks your sport's
+          language. Pick yours to see how it fits.
+        </p>
+      </div>
+      <div class="grid grid-4 sports-grid">
+        {SPORTS.map((s) => (
+          <a class="sport-card" href={`/sports/${s.slug}`}>
+            <span class="icon" aria-hidden="true">{s.emoji}</span>
+            <h3>{s.short}</h3>
+            <p>{s.tagline}</p>
+            <span class="go">{s.short} club management →</span>
+          </a>
+        ))}
+        <div class="sport-card more">
+          <span class="icon" aria-hidden="true">➕</span>
+          <h3>Your sport</h3>
+          <p>Football, GAA, hockey, swimming, tennis, rugby — any club.</p>
+          <a class="go" href="#waitlist">Start your club →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Roadmap -->
-  <section id="roadmap" class="section">
+  <section id="roadmap" class="section soft">
     <div class="container">
       <div class="text-center section-head">
         <p class="eyebrow">Where it's going</p>
@@ -156,7 +227,7 @@ const roadmap = [
   </section>
 
   <!-- Ecosystem -->
-  <section id="ecosystem" class="section soft">
+  <section id="ecosystem" class="section">
     <div class="container text-center section-head">
       <p class="eyebrow">Part of Sneat Sport</p>
       <h2>The management layer under the live game</h2>
@@ -176,7 +247,7 @@ const roadmap = [
   </section>
 
   <!-- Waitlist CTA -->
-  <section id="waitlist" class="section">
+  <section id="waitlist" class="section soft">
     <div class="container text-center section-head">
       <p class="eyebrow">Early access</p>
       <h2>Bring your club on board</h2>
@@ -268,4 +339,25 @@ const roadmap = [
   .now-pill { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; background: var(--pill-live-bg); color: var(--pill-live-ink); padding: 0.12rem 0.5rem; border-radius: var(--radius-pill); }
 
   .ecosystem-links { margin-top: var(--space-2); font-weight: 600; }
+
+  .sports-grid { align-items: stretch; }
+  .sport-card {
+    display: flex; flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    box-shadow: var(--shadow);
+    color: var(--color-text);
+    height: 100%;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  a.sport-card:hover { text-decoration: none; transform: translateY(-3px); border-color: var(--color-accent); }
+  .sport-card .icon { font-size: 2.2rem; }
+  .sport-card h3 { font-size: 1.15rem; margin: 0.4rem 0 0.2rem; }
+  .sport-card p { font-size: 0.9rem; margin: 0 0 var(--space-2); }
+  .sport-card .go { margin-top: auto; font-weight: 700; font-size: 0.85rem; color: var(--color-accent-strong); }
+  .sport-card.more { border-style: dashed; }
+
+  .center-note { text-align: center; margin-top: var(--space-3); }
 </style>
