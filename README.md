@@ -11,7 +11,7 @@ Sneat Club is a **curate-not-own hub** over the Sneat graph: a club *is* a
 coaches / volunteers are `contactus` contacts wired by `linkage` edges. It owns
 the durable club org-spine and **integrates** the specialist engines rather than
 rebuilding them — live scoring via [GameBoard.live](https://gameboard.live),
-competitions via [MatchUps.center](https://matchups.center), facility bookings
+competitions via [Competios.com](https://competios.com), facility bookings
 via Bookius, attendance via RSVP.express, money via Debtus/Budgetus, reminders
 via Remindius, and player kit sizing via Sizeus.
 

@@ -61,7 +61,7 @@ export const SPORTS = [
     ],
     plugs: [
       { name: "Bookius", text: "court & hall booking" },
-      { name: "MatchUps.center", text: "box & ladder leagues" },
+      { name: "Competios.com", text: "box & ladder leagues" },
       { name: "Debtus", text: "membership subs" },
     ],
   },
@@ -142,7 +142,7 @@ export const SPORTS = [
     plugs: [
       { name: "Bookius", text: "court & gym booking" },
       { name: "GameBoard.live", text: "live scoring" },
-      { name: "MatchUps.center", text: "leagues & standings" },
+      { name: "Competios.com", text: "leagues & standings" },
     ],
   },
   {
@@ -161,7 +161,7 @@ export const SPORTS = [
     ],
     plugs: [
       { name: "Bookius", text: "court & coaching booking" },
-      { name: "MatchUps.center", text: "box leagues & ladders" },
+      { name: "Competios.com", text: "box leagues & ladders" },
       { name: "Debtus", text: "membership subs" },
     ],
   },
