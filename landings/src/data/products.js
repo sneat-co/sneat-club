@@ -1,9 +1,10 @@
 // Canonical public URLs for the sister products Sneat Club links out to.
 // Only products with a LIVE domain are listed — names not here render as plain
 // text (no dead links). Verified live 2026-07-13.
-// Not yet live (kept as plain text): MatchUps.center, Budgetus.
+// Not yet live (kept as plain text): Budgetus.
 export const PRODUCTS = {
   "GameBoard.live": "https://gameboard.live",
+  "Competios.com": "https://competios.com",
   "Bookius": "https://book-online.app",
   "RSVP.express": "https://rsvp.express",
   "Sizeus": "https://sizechart.app",
