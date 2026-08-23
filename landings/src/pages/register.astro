@@ -1,0 +1,236 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Register your club — Sneat Club"
+  description="Register your sports club on Sneat Club. Sign in with your Sneat account and your club becomes a real space on the Sneat graph — teams, rosters, memberships and more."
+>
+  <section class="section">
+    <div class="container narrow">
+      <p class="eyebrow">Registration</p>
+      <h1>Register your club</h1>
+      <p class="lead">
+        Your club becomes a real space on the Sneat graph — not a browser demo.
+        Players, guardians, coaches and volunteers join it as <strong>members</strong>,
+        because in a club membership <em>is</em> the relationship.
+      </p>
+
+      <!-- Step 1: identity. Registering creates a space owned by a Sneat
+           account, so there has to be one. -->
+      <div id="signin-step" class="card" hidden>
+        <h2>1 · Sign in to Sneat</h2>
+        <p class="muted">
+          The same Sneat account you use across sneat.family, sneat.work and the
+          rest of the ecosystem.
+        </p>
+        <div class="row">
+          <button id="google-btn" class="btn btn-primary" type="button">Continue with Google</button>
+        </div>
+        <form id="email-form" class="row">
+          <input id="email-input" type="email" placeholder="you@example.com" autocomplete="email" required />
+          <input id="password-input" type="password" placeholder="Password" autocomplete="current-password" required />
+          <button class="btn btn-secondary" type="submit">Sign in</button>
+        </form>
+        <p id="signin-error" class="error" hidden></p>
+      </div>
+
+      <!-- Step 2: the club itself. -->
+      <div id="register-step" class="card" hidden>
+        <p class="muted" id="signed-in-as"></p>
+
+        <div id="existing-wrap" hidden>
+          <h2>Clubs you already manage</h2>
+          <ul id="existing-list" class="clubs"></ul>
+          <p class="muted">Or register another below.</p>
+        </div>
+
+        <h2>Your club</h2>
+        <form id="club-form">
+          <label for="club-input">Club name</label>
+          <input id="club-input" type="text" placeholder="e.g. Limerick Celtics" autocomplete="organization" required />
+
+          <label for="slug-input">Public web address</label>
+          <input id="slug-input" type="text" placeholder="limerick-celtics" />
+          <p class="muted"><small>sneat.club/c/<span id="slug-preview">your-club</span></small></p>
+
+          <label for="country-input">Country</label>
+          <input id="country-input" type="text" placeholder="IE" maxlength="2" />
+
+          <p id="register-error" class="error" hidden></p>
+
+          <div class="row">
+            <button id="register-btn" class="btn btn-primary" type="submit">Register this club</button>
+            <button id="signout-btn" class="btn btn-secondary" type="button">Sign out</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: registered. -->
+      <div id="done-step" class="card" hidden>
+        <h2>🎉 <span id="done-name"></span> is registered</h2>
+        <p class="muted">
+          Your club is a Sneat space now. Its id is <code id="done-id"></code>.
+        </p>
+        <p id="done-slug-wrap" hidden>
+          Public address: <strong>sneat.club/c/<span id="done-slug"></span></strong>
+        </p>
+        <p>
+          <a class="btn btn-secondary" href="/app">Open the app preview</a>
+        </p>
+      </div>
+
+      <p class="footnote">
+        Not ready yet? <a href="/app">Try the in-browser preview</a> — it stays in
+        your browser and registers nothing.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .container.narrow { max-width: 46rem; }
+  .card { margin: 1.5rem 0; padding: 1.5rem; border: 1px solid var(--line, #dcdcd6); border-radius: 12px; }
+  .card h2 { margin-top: 0; font-size: 1.1rem; }
+  .row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin: 0.75rem 0; }
+  form label { display: block; margin: 0.85rem 0 0.25rem; font-weight: 600; font-size: 0.9rem; }
+  form input { width: 100%; padding: 0.6rem 0.7rem; border: 1px solid var(--line, #dcdcd6); border-radius: 8px; font: inherit; }
+  .row input { width: auto; flex: 1 1 12rem; }
+  .error { color: #a3271f; font-size: 0.9rem; }
+  .clubs { list-style: none; padding: 0; margin: 0.5rem 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .clubs li { padding: 0.6rem 0.75rem; border: 1px solid var(--line, #dcdcd6); border-radius: 8px; }
+  .footnote { margin-top: 2rem; font-size: 0.9rem; }
+  button[disabled] { opacity: 0.6; cursor: progress; }
+</style>
+
+<script>
+  import {
+    clearRegistrationRequestId,
+    listManageableClubs,
+    onSignedInUserChanged,
+    registerClub,
+    registrationRequestId,
+    signInWithEmail,
+    signInWithGoogle,
+    signOutOfSneat,
+    slugifyClubName,
+    type ManageableSpace,
+  } from '../lib/sneat-registration';
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+  const signinStep = $<HTMLDivElement>('signin-step');
+  const registerStep = $<HTMLDivElement>('register-step');
+  const doneStep = $<HTMLDivElement>('done-step');
+  const signinError = $<HTMLParagraphElement>('signin-error');
+  const registerError = $<HTMLParagraphElement>('register-error');
+  const clubInput = $<HTMLInputElement>('club-input');
+  const slugInput = $<HTMLInputElement>('slug-input');
+  const slugPreview = $<HTMLSpanElement>('slug-preview');
+  const countryInput = $<HTMLInputElement>('country-input');
+  const registerBtn = $<HTMLButtonElement>('register-btn');
+
+  function show(el: HTMLElement, visible: boolean): void {
+    el.hidden = !visible;
+  }
+
+  function showError(el: HTMLParagraphElement, message: string): void {
+    el.textContent = message;
+    show(el, Boolean(message));
+  }
+
+  // Auth drives which step is on screen: registering creates a space owned by
+  // a Sneat account, so there must be one before the club form is reachable.
+  onSignedInUserChanged((user) => {
+    show(signinStep, !user);
+    show(registerStep, Boolean(user) && doneStep.hidden);
+    if (!user) return;
+
+    $<HTMLParagraphElement>('signed-in-as').textContent =
+      `Signed in as ${user.email ?? user.displayName ?? user.uid}`;
+
+    // Offering existing clubs is a convenience — a failure here must not stop
+    // someone registering their first one.
+    listManageableClubs()
+      .then((clubs: ManageableSpace[]) => {
+        if (!clubs.length) return;
+        const list = $<HTMLUListElement>('existing-list');
+        list.innerHTML = '';
+        for (const club of clubs) {
+          const li = document.createElement('li');
+          li.textContent = club.title;
+          list.appendChild(li);
+        }
+        show($<HTMLDivElement>('existing-wrap'), true);
+      })
+      .catch(() => undefined);
+  });
+
+  $<HTMLButtonElement>('google-btn').addEventListener('click', () => {
+    showError(signinError, '');
+    signInWithGoogle().catch((err: unknown) =>
+      showError(signinError, err instanceof Error ? err.message : String(err)),
+    );
+  });
+
+  $<HTMLFormElement>('email-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    showError(signinError, '');
+    signInWithEmail(
+      $<HTMLInputElement>('email-input').value,
+      $<HTMLInputElement>('password-input').value,
+    ).catch((err: unknown) =>
+      showError(signinError, err instanceof Error ? err.message : String(err)),
+    );
+  });
+
+  $<HTMLButtonElement>('signout-btn').addEventListener('click', () => {
+    void signOutOfSneat();
+  });
+
+  clubInput.addEventListener('input', () => {
+    // Only autofill while the operator has not typed their own slug.
+    if (!slugInput.value || slugInput.value === slugifyClubName(clubInput.value.slice(0, -1))) {
+      slugInput.value = slugifyClubName(clubInput.value);
+    }
+    slugPreview.textContent = slugInput.value || 'your-club';
+  });
+  slugInput.addEventListener('input', () => {
+    slugPreview.textContent = slugInput.value || 'your-club';
+  });
+
+  $<HTMLFormElement>('club-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const title = clubInput.value.trim();
+    if (!title) return;
+
+    showError(registerError, '');
+    registerBtn.disabled = true;
+
+    registerClub({
+      title,
+      // Stable across retries — see registrationRequestId.
+      requestID: registrationRequestId(),
+      countryID: countryInput.value.trim().toUpperCase() || undefined,
+      slug: slugInput.value.trim() || undefined,
+    })
+      .then((club) => {
+        clearRegistrationRequestId();
+        $<HTMLSpanElement>('done-name').textContent = title;
+        $<HTMLElement>('done-id').textContent = club.spaceID;
+        if (club.publicSlug) {
+          $<HTMLSpanElement>('done-slug').textContent = club.publicSlug;
+          show($<HTMLParagraphElement>('done-slug-wrap'), true);
+        }
+        show(registerStep, false);
+        show(doneStep, true);
+      })
+      .catch((err: unknown) => {
+        // A registration that failed must read as failed.
+        showError(registerError, err instanceof Error ? err.message : String(err));
+      })
+      .finally(() => {
+        registerBtn.disabled = false;
+      });
+  });
+</script>
