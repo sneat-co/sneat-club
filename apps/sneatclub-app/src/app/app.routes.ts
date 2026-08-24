@@ -59,6 +59,15 @@ export const appRoutes: Route[] = [
         data: { title: 'Choose your plan' },
       },
       {
+        // Stripe's return URL after embedded checkout (paymentus catalogue).
+        path: 'return',
+        loadComponent: () =>
+          import('./register/register-return-page.component').then(
+            (m) => m.RegisterReturnPageComponent,
+          ),
+        data: { title: 'Payment' },
+      },
+      {
         path: 'welcome',
         loadComponent: () =>
           import('./register/register-welcome-page.component').then(
