@@ -22,8 +22,10 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
-  /* Run your local dev server before starting the tests */
-  webServer: {
+  /* Run your local dev server before starting the tests. Skipped when
+     BASE_URL is set — the prod-smoke workflow serves the built bundle itself
+     (tools/spa-server.mjs) and must not also boot the dev server. */
+  webServer: process.env['BASE_URL'] ? undefined : {
     command: 'pnpm exec nx run sneatclub-app:serve',
     url: 'http://localhost:4200',
     reuseExistingServer: true,

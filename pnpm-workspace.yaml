@@ -1,4 +1,7 @@
 overrides:
+  '@sneat/extension-contactus': 0.13.5
+  '@sneat/extension-contactus-ui': 0.13.5
+  '@sneat/extension-assetus': 0.0.5
   # @sneat/* framework libraries — all on the version this app depends on.
   '@sneat/api': 0.24.0
   '@sneat/app': 0.24.0
@@ -89,3 +92,9 @@ onlyBuiltDependencies:
   - nx
   - protobufjs
   - unrs-resolver
+
+# The runtime lib declares only peerDependencies; auto-installing them gave
+# the lib its OWN instances of @sneat/ui etc. — two InjectionToken('className')
+# objects in one bundle, breaking DI (NG0201) on the space route in prod.
+autoInstallPeers: false
+dedupePeerDependents: true
