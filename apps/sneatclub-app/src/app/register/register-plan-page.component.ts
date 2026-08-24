@@ -17,7 +17,7 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { loadStripe } from '@stripe/stripe-js';
 import { CheckoutPlanFacts, CheckoutService } from './checkout.service';
 import { loadRegisteredResult } from './registration-draft.service';

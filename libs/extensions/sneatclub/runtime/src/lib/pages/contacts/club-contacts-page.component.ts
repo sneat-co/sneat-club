@@ -17,7 +17,7 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { IIdAndBrief } from '@sneat/core';
 import {
   CONTACTUS_SPACE_SERVICE,

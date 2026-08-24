@@ -17,7 +17,7 @@ import {
   IonNote,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { CountryInputComponent } from '@sneat/components';
 import {
   loadRegistrationDraft,
