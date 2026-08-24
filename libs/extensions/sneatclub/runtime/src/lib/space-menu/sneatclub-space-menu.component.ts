@@ -28,7 +28,7 @@ import { SpaceServiceModule } from '@sneat/space-services';
 import { zipMapBriefsWithIDs } from '@sneat/space-models';
 import { ClassName } from '@sneat/ui';
 import { takeUntil } from 'rxjs/operators';
-import { clubMenuItems } from '../club-menu-items';
+import { clubMenuItemsFor } from '../club-menu-items';
 import { clubSpacesOnly } from '../club-spaces';
 
 // sneatclub-specific side menu rendered in the space "menu" outlet. Unlike the
@@ -59,7 +59,14 @@ import { clubSpacesOnly } from '../club-spaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SneatclubSpaceMenuComponent extends SpaceBaseComponent {
-  protected readonly menuItems = clubMenuItems;
+  // A team (child Space) has no sub-teams — its menu drops the Teams entry
+  // and gains a link up to the club (rendered in the template).
+  protected readonly $parentSpaceID = computed(
+    () => this.$space().dbo?.parentSpaceID,
+  );
+  protected readonly $menuItems = computed(() =>
+    clubMenuItemsFor(!!this.$parentSpaceID()),
+  );
   protected readonly $spaces = signal<
     readonly IIdAndBrief<IUserSpaceBrief>[] | undefined
   >(undefined);

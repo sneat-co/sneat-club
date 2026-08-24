@@ -14,3 +14,14 @@ export const clubMenuItems: readonly IClubMenuItem[] = [
   { path: 'venues', title: 'Venues', icon: 'location-outline' },
   { path: 'gear', title: 'Gear', icon: 'tennisball-outline' },
 ];
+
+// A team is a child Space of a club (it shares the club's space TYPE — what
+// differs is having a parent). Teams have no sub-teams, so a team's menu has
+// no Teams entry.
+export function clubMenuItemsFor(
+  isChildSpace: boolean,
+): readonly IClubMenuItem[] {
+  return isChildSpace
+    ? clubMenuItems.filter((item) => item.path !== 'teams')
+    : clubMenuItems;
+}

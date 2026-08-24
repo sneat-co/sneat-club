@@ -30,7 +30,18 @@
   </ion-item>
 
   <!-- The club's sections — the same items the overview's Menu card shows. -->
-  @for (item of menuItems; track item.path) {
+  @if ($parentSpaceID(); as parentID) {
+    <ion-item
+      tappable
+      [routerLink]="'/space/club/' + parentID"
+      routerDirection="root"
+      (click)="closeMenu()"
+    >
+      <ion-icon name="arrow-up-outline" slot="start" />
+      <ion-label>Club</ion-label>
+    </ion-item>
+  }
+  @for (item of $menuItems(); track item.path) {
     <ion-item
       tappable
       [routerLink]="spacePageUrl(item.path)"
