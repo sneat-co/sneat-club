@@ -78,8 +78,12 @@ export class App extends BaseAppComponent {
   // Focused routes render without the side pane: registration is entered from
   // the marketing landing and should read as a continuation of it — one job,
   // no app chrome — rather than a page deep inside the app.
-  private readonly isFocusedRoute = computed(() =>
-    this.currentUrl().startsWith('/register'),
+  private readonly isFocusedRoute = computed(
+    () =>
+      this.currentUrl().startsWith('/register') ||
+      // The login page with the side pane open showed a weird, empty panel —
+      // there is nothing to put in a menu before sign-in.
+      this.currentUrl().startsWith('/login'),
   );
 
   // ion-split-pane's `when` accepts a media query or a boolean; `false` keeps

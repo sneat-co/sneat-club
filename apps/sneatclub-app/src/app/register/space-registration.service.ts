@@ -3,9 +3,9 @@ import { SneatApiService } from '@sneat/api';
 import { Observable, map } from 'rxjs';
 
 /**
- * The extension id Sneat Club registers Spaces under. The backend reads it
+ * The extension id sneat.club registers Spaces under. The backend reads it
  * to find this product's registration profile, which supplies the space type
- * (`club` — membership IS the relationship) and the slug namespace — so the client never names either, and
+ * (`company`) and the slug namespace — so the client never names either, and
  * cannot ask for a kind of Space this product does not own.
  *
  * See sneat-specs decision 0006, unified space registration.
@@ -32,7 +32,7 @@ export interface IRegisterClubRequest {
 
 export interface IRegisteredClub {
   readonly spaceID: string;
-  /** The club's module markers — contains `sneatclub` after registering. */
+  /** The club's module markers — contains `communitycentrum` after registering. */
   readonly modules: readonly string[];
   readonly publicSlug?: string;
 }
@@ -49,9 +49,9 @@ interface IListManageableResponse {
 }
 
 /**
- * Registers sports clubs through the platform's unified space-registration
+ * Registers community clubs through the platform's unified space-registration
  * endpoints, shared by every Sneat product (school-portal.app, gametable.space,
- * noticeboard.cc, sneat.club). Sneat Club owns no registration logic of its
+ * noticeboard.cc, sneat.club). NoticeBoard owns no registration logic of its
  * own — only which fields a club is asked for.
  */
 @Injectable({ providedIn: 'root' })
@@ -60,7 +60,7 @@ export class SpaceRegistrationService {
 
   /**
    * Registers a club. One call creates the Space, records the
-   * `sneatclub` module marker on it, stores the country and claims the
+   * `communitycentrum` module marker on it, stores the country and claims the
    * public slug.
    */
   public registerClub(
@@ -89,24 +89,4 @@ export class SpaceRegistrationService {
   }
 }
 
-/**
- * Mints the id that makes one registration attempt idempotent.
- *
- * It must be created when the form is opened, not when it is submitted: an id
- * minted at submit time is new on every attempt, so a double submit registers
- * two clubs — which is exactly what a stable id exists to prevent.
- */
-export function newRegistrationRequestId(): string {
-  return `sneatclub-club-${globalThis.crypto.randomUUID()}`;
-}
 
-/** Turns a club name into a candidate public slug. */
-export function slugifyClubName(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 60);
-}
