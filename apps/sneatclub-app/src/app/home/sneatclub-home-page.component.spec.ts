@@ -18,7 +18,10 @@ describe('SneatclubHomePageComponent', () => {
     user: { uid: 'u1', isAnonymous: false, emailVerified: true, providerData: [] },
     record: {
       title: 'Test User',
-      spaces: { s1: { title: 'Family', type: 'family', roles: ['creator'] } },
+      spaces: {
+        s1: { title: 'Family', type: 'family', roles: ['creator'] },
+        c1: { title: 'Limerick Celtics', type: 'club', roles: ['creator'] },
+      },
     },
   });
 
@@ -43,7 +46,10 @@ describe('SneatclubHomePageComponent', () => {
     // (SpaceService / UserRequiredFieldsService) is missing this throws NG0201.
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
-    expect(host.querySelector('sneat-spaces-card')).toBeTruthy();
     expect(host.querySelector('sneat-spaces-list')).toBeTruthy();
+    // Only clubs are listed: the family space must NOT appear (founder
+    // feedback 2026-08-24 — the club app is not a generic space browser).
+    expect(host.textContent).toContain('Limerick Celtics');
+    expect(host.textContent).not.toContain('Family');
   });
 });
