@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { SneatApiService } from '@sneat/api';
 import { SneatAuthStateService } from '@sneat/auth-core';
+import { ErrorLogger } from '@sneat/core';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RegisterStartPageComponent } from './register-start-page.component';
 import { RegisterSignInPageComponent } from './register-sign-in-page.component';
@@ -15,6 +16,12 @@ interface IPostCall {
   readonly endpoint: string;
   readonly body: Record<string, unknown>;
 }
+
+// The shared country input (via @sneat/ui) injects the ErrorLogger token.
+const errorLoggerProvider = {
+  provide: ErrorLogger,
+  useValue: { logError: (e: unknown) => e, logErrorHandler: () => (e: unknown) => e },
+};
 
 const wizardRoutes = [
   { path: 'register/start', children: [] },
@@ -30,7 +37,7 @@ describe('RegisterStartPageComponent', () => {
     sessionStorage.clear();
     TestBed.configureTestingModule({
       imports: [RegisterStartPageComponent],
-      providers: [provideRouter(wizardRoutes)],
+      providers: [provideRouter(wizardRoutes), errorLoggerProvider],
     });
   });
 
@@ -103,6 +110,7 @@ function setupSignIn(options?: {
     imports: [RegisterSignInPageComponent],
     providers: [
       provideRouter(wizardRoutes),
+      errorLoggerProvider,
       { provide: SneatApiService, useValue: api },
       { provide: SneatAuthStateService, useValue: authState },
     ],

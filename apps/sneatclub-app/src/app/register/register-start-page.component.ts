@@ -18,6 +18,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
+import { CountryInputComponent } from '@sneat/components';
 import {
   loadRegistrationDraft,
   newDraftRequestID,
@@ -54,6 +55,7 @@ import {
     IonItem,
     IonInput,
     IonNote,
+    CountryInputComponent,
   ],
   template: `
     <ion-header>
@@ -97,15 +99,14 @@ import {
                   [(ngModel)]="slug"
                 />
               </ion-item>
-              <ion-item>
-                <ion-input
-                  label="Country"
-                  labelPlacement="stacked"
-                  placeholder="IE"
-                  maxlength="2"
-                  [(ngModel)]="countryID"
-                />
-              </ion-item>
+              <!-- The shared country selector (searchable, grouped by region)
+                   instead of a bare two-letter text box. It lazy-loads
+                   assets/data/countries.json, shipped in public/. -->
+              <sneat-country-input
+                label="Country"
+                [countryID]="countryID"
+                (countryIDChange)="countryID = $event"
+              />
             </ion-list>
 
             <p>
