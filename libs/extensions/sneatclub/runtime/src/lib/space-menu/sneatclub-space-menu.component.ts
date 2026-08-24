@@ -29,6 +29,7 @@ import { zipMapBriefsWithIDs } from '@sneat/space-models';
 import { ClassName } from '@sneat/ui';
 import { takeUntil } from 'rxjs/operators';
 import { clubMenuItems } from '../club-menu-items';
+import { clubSpacesOnly } from '../club-spaces';
 
 // sneatclub-specific side menu rendered in the space "menu" outlet. Unlike the
 // generic @sneat SpaceMenuComponent (which hardcodes every sneat-app extension —
@@ -74,7 +75,9 @@ export class SneatclubSpaceMenuComponent extends SpaceBaseComponent {
         next: (userState: ISneatUserState) =>
           this.$spaces.set(
             userState?.record
-              ? zipMapBriefsWithIDs(userState.record.spaces) || []
+              ? clubSpacesOnly(
+                  zipMapBriefsWithIDs(userState.record.spaces) || [],
+                )
               : undefined,
           ),
         error: this.errorLogger.logErrorHandler('failed to get user state'),
