@@ -1,7 +1,8 @@
 <ion-header>
   <ion-toolbar color="light">
     <ion-title>
-      ⚽ {{ $space().brief?.title || 'Club' }}
+      {{ $parentSpaceID() ? '🎽' : '⚽' }}
+      {{ $space().brief?.title || 'Club' }}
     </ion-title>
     <ion-buttons slot="end">
       <ion-menu-button menu="mainMenu" />
@@ -10,60 +11,90 @@
 </ion-header>
 
 <ion-content>
-  <ion-card class="last-child-no-border">
-    <ion-item
-      color="divider"
-      lines="full"
-      tappable
-      [routerLink]="spacePageUrl('teams')"
-      routerDirection="root"
-      detail="true"
-    >
-      <ion-icon name="shirt-outline" slot="start" />
-      <ion-label color="medium">Teams</ion-label>
-    </ion-item>
-    @if ($teamsError(); as teamsError) {
-      <ion-item lines="none">
-        <ion-text color="danger">{{ teamsError }}</ion-text>
-      </ion-item>
-    } @else if ($teams(); as teams) {
-      @for (team of teams; track team.id) {
-        <ion-item
-          tappable
-          [routerLink]="'/space/' + team.type + '/' + team.id"
-          routerDirection="root"
-          detail="true"
-        >
-          <ion-label>{{ team.title }}</ion-label>
-        </ion-item>
-      } @empty {
-        <ion-item lines="none">
-          <ion-text color="medium">No teams yet.</ion-text>
-        </ion-item>
-      }
-    } @else {
+  <!-- Which variant this space is (club vs team) is only known once the space
+       document loads — branching earlier would flash a team's page with the
+       club's Teams card. -->
+  @if (!$dboLoaded()) {
+    <ion-card class="last-child-no-border">
       <ion-item lines="none">
         <ion-skeleton-text [animated]="true" style="width: 60%" />
       </ion-item>
-    }
-  </ion-card>
-
-  <!-- The side menu's items, as a card — only below the lg breakpoint, where
-       the split pane collapses and the side menu hides behind the burger. -->
-  <ion-card class="ion-hide-lg-up last-child-no-border">
-    <ion-item color="divider" lines="full">
-      <ion-label color="medium">Menu</ion-label>
-    </ion-item>
-    @for (item of menuItems; track item.path) {
+    </ion-card>
+  } @else if ($parentSpaceID(); as parentSpaceID) {
+    <!-- A team: no Teams card (teams have no sub-teams) — link up to the club
+         instead. -->
+    <ion-card class="last-child-no-border">
       <ion-item
         tappable
-        [routerLink]="spacePageUrl(item.path)"
+        [routerLink]="'/space/club/' + parentSpaceID"
         routerDirection="root"
         detail="true"
       >
-        <ion-icon [name]="item.icon" slot="start" />
-        <ion-label>{{ item.title }}</ion-label>
+        <ion-icon name="arrow-up-outline" slot="start" />
+        <ion-label>
+          <ion-text color="medium">Club</ion-text>
+          <h2>{{ $parentTitle() || 'Open club' }}</h2>
+        </ion-label>
       </ion-item>
-    }
-  </ion-card>
+    </ion-card>
+  } @else {
+    <ion-card class="last-child-no-border">
+      <ion-item
+        color="divider"
+        lines="full"
+        tappable
+        [routerLink]="spacePageUrl('teams')"
+        routerDirection="root"
+        detail="true"
+      >
+        <ion-icon name="shirt-outline" slot="start" />
+        <ion-label color="medium">Teams</ion-label>
+      </ion-item>
+      @if ($teamsError(); as teamsError) {
+        <ion-item lines="none">
+          <ion-text color="danger">{{ teamsError }}</ion-text>
+        </ion-item>
+      } @else if ($teams(); as teams) {
+        @for (team of teams; track team.id) {
+          <ion-item
+            tappable
+            [routerLink]="'/space/' + team.type + '/' + team.id"
+            routerDirection="root"
+            detail="true"
+          >
+            <ion-label>{{ team.title }}</ion-label>
+          </ion-item>
+        } @empty {
+          <ion-item lines="none">
+            <ion-text color="medium">No teams yet.</ion-text>
+          </ion-item>
+        }
+      } @else {
+        <ion-item lines="none">
+          <ion-skeleton-text [animated]="true" style="width: 60%" />
+        </ion-item>
+      }
+    </ion-card>
+  }
+
+  <!-- The side menu's items, as a card — only below the lg breakpoint, where
+       the split pane collapses and the side menu hides behind the burger. -->
+  @if ($dboLoaded()) {
+    <ion-card class="ion-hide-lg-up last-child-no-border">
+      <ion-item color="divider" lines="full">
+        <ion-label color="medium">Menu</ion-label>
+      </ion-item>
+      @for (item of $menuItems(); track item.path) {
+        <ion-item
+          tappable
+          [routerLink]="spacePageUrl(item.path)"
+          routerDirection="root"
+          detail="true"
+        >
+          <ion-icon [name]="item.icon" slot="start" />
+          <ion-label>{{ item.title }}</ion-label>
+        </ion-item>
+      }
+    </ion-card>
+  }
 </ion-content>

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -27,7 +28,7 @@ import { SpaceServiceModule } from '@sneat/space-services';
 import { ClassName } from '@sneat/ui';
 import { of } from 'rxjs';
 import { catchError, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { clubMenuItems } from '../../club-menu-items';
+import { clubMenuItemsFor } from '../../club-menu-items';
 import {
   ChildSpacesService,
   IChildSpaceBrief,
@@ -63,9 +64,26 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClubPageComponent extends SpaceBaseComponent {
-  protected readonly menuItems = clubMenuItems;
   protected readonly $teams = signal<IChildSpaceBrief[] | undefined>(undefined);
   protected readonly $teamsError = signal<string | undefined>(undefined);
+
+  // A team is a child Space: same space TYPE as the club, but with a parent.
+  // Until the space document loads we don't know which variant to render, so
+  // templates must gate on $dboLoaded before branching on $parentSpaceID —
+  // otherwise a team flashes the club's Teams card while loading.
+  protected readonly $dboLoaded = computed(() => !!this.$space().dbo);
+  protected readonly $parentSpaceID = computed(
+    () => this.$space().dbo?.parentSpaceID,
+  );
+  protected readonly $menuItems = computed(() =>
+    clubMenuItemsFor(!!this.$parentSpaceID()),
+  );
+  // The parent club's title, when the current user is a member of it.
+  private readonly $userSpaceTitles = signal<Record<string, string>>({});
+  protected readonly $parentTitle = computed(() => {
+    const parentID = this.$parentSpaceID();
+    return parentID ? this.$userSpaceTitles()[parentID] : undefined;
+  });
 
   private readonly childSpacesService = inject(ChildSpacesService);
 
@@ -93,5 +111,22 @@ export class ClubPageComponent extends SpaceBaseComponent {
         }),
       )
       .subscribe((teams) => this.$teams.set(teams));
+
+    this.userService.userState.pipe(this.takeUntilDestroyed()).subscribe({
+      next: (userState) => {
+        const titles: Record<string, string> = {};
+        Object.entries(userState?.record?.spaces ?? {}).forEach(
+          ([id, brief]) => {
+            if (brief?.title) {
+              titles[id] = brief.title;
+            }
+          },
+        );
+        this.$userSpaceTitles.set(titles);
+      },
+      error: this.errorLogger.logErrorHandler(
+        'failed to get user state for parent club title',
+      ),
+    });
   }
 }
