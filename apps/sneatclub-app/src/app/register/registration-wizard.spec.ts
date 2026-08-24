@@ -28,7 +28,7 @@ const wizardRoutes = [
   { path: 'register/sign-in', children: [] },
   { path: 'register/plan', children: [] },
   { path: 'register/welcome', children: [] },
-  { path: 'space/:spaceType/:spaceID/dashboard', children: [] },
+  { path: 'space/:spaceType/:spaceID', children: [] },
   { path: '**', children: [] },
 ];
 

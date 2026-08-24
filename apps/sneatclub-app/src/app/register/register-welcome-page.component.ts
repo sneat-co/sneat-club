@@ -118,7 +118,7 @@ export class RegisterWelcomePageComponent {
     // The registration attempt is complete — the next visit to /register
     // starts a fresh draft with a fresh requestID.
     clearRegistrationDraft();
-    void this.router.navigate(['space', r.spaceType, r.spaceID, 'dashboard'], {
+    void this.router.navigate(['space', r.spaceType, r.spaceID], {
       replaceUrl: true,
     });
   }

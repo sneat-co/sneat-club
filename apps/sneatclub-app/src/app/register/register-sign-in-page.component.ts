@@ -287,7 +287,7 @@ export class RegisterSignInPageComponent {
   }
 
   protected openExisting(space: IManageableSpace): void {
-    void this.router.navigate(['space', space.spaceType, space.spaceID, 'dashboard']);
+    void this.router.navigate(['space', space.spaceType, space.spaceID]);
   }
 
   protected create(): void {
