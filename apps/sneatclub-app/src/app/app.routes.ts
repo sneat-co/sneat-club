@@ -24,19 +24,49 @@ export const appRoutes: Route[] = [
       import('./space/sneatclub-space.routes').then((m) => m.sneatclubSpaceRoutes),
   },
   {
-    // Register a club — the unified space-registration flow (sneat-specs
-    // decision 0006). Guarded: registering creates a Space owned by the
-    // signed-in user, so there must be one.
+    // Register your club — the unified space-registration wizard
+    // (sneat-specs decision 0006): form first, sign-in at the commit point
+    // with the visitor's data still on screen, then plan, then onboarding.
+    //
+    // Deliberately UNGUARDED: an AuthGuard here made the first thing a visitor
+    // saw a stock login page — a sign-in wall before any value. Steps that need
+    // state (auth, a created space) redirect within the wizard instead.
     path: 'register',
-    loadComponent: () =>
-      import('./register/register-club-page.component').then(
-        (m) => m.RegisterClubPageComponent,
-      ),
-    canActivate: [AuthGuard],
-    data: {
-      title: 'Register your club',
-      authGuardPipe: () => redirectToLoginIfNotSignedIn,
-    },
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'start' },
+      {
+        path: 'start',
+        loadComponent: () =>
+          import('./register/register-start-page.component').then(
+            (m) => m.RegisterStartPageComponent,
+          ),
+        data: { title: 'Register your club' },
+      },
+      {
+        path: 'sign-in',
+        loadComponent: () =>
+          import('./register/register-sign-in-page.component').then(
+            (m) => m.RegisterSignInPageComponent,
+          ),
+        data: { title: 'Sign in to create your club' },
+      },
+      {
+        path: 'plan',
+        loadComponent: () =>
+          import('./register/register-plan-page.component').then(
+            (m) => m.RegisterPlanPageComponent,
+          ),
+        data: { title: 'Choose your plan' },
+      },
+      {
+        path: 'welcome',
+        loadComponent: () =>
+          import('./register/register-welcome-page.component').then(
+            (m) => m.RegisterWelcomePageComponent,
+          ),
+        data: { title: 'Welcome' },
+      },
+    ],
   },
   {
     // sneat-auth-menu-item navigates here on sign-out; mirror sneat-app and
