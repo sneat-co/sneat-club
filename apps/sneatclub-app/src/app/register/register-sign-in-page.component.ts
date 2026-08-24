@@ -26,8 +26,10 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { SneatAuthStateService } from '@sneat/auth-core';
+import { switchMap } from 'rxjs';
 import {
   IManageableSpace,
+  registrationErrorMessage,
   SpaceRegistrationService,
 } from './space-registration.service';
 import {
@@ -295,15 +297,28 @@ export class RegisterSignInPageComponent {
     }
     this.busy.set(true);
     this.error.set('');
+    const user = this.authUser();
     this.registration
-      .registerClub({
-        title: draft.title,
-        // Minted when the draft began; stable across sign-in and retries, so
-        // a resubmit replays instead of creating a second club.
-        requestID: draft.requestID,
-        countryID: draft.countryID || undefined,
-        slug: draft.slug || undefined,
+      // The users/{uid} record must exist before register_space — a brand-new
+      // account's first API call is this one.
+      .ensureUserRecord({
+        email: user?.email,
+        emailVerified: user?.emailVerified,
+        providerId: user?.providerId ?? undefined,
+        displayName: user?.displayName,
       })
+      .pipe(
+        switchMap(() =>
+          this.registration.registerClub({
+            title: draft.title,
+            // Minted when the draft began; stable across sign-in and retries,
+            // so a resubmit replays instead of creating a second club.
+            requestID: draft.requestID,
+            countryID: draft.countryID || undefined,
+            slug: draft.slug || undefined,
+          }),
+        ),
+      )
       .subscribe({
         next: (club) => {
           this.busy.set(false);
@@ -317,9 +332,10 @@ export class RegisterSignInPageComponent {
         },
         error: (err: unknown) => {
           this.busy.set(false);
-          // A registration that failed must read as failed.
+          // A registration that failed must read as failed — with the real
+          // reason: the generic fallback hid a missing-user-record 500.
           this.error.set(
-            err instanceof Error ? err.message : 'We could not register your club. Please try again.',
+            registrationErrorMessage(err, 'We could not register your club. Please try again.'),
           );
         },
       });

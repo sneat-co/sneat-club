@@ -82,6 +82,9 @@ function setupSignIn(options?: {
       if (endpoint === 'spaces/list_manageable') {
         return of(options?.manageable ?? { spaces: [] });
       }
+      if (endpoint === 'users/init_user_record') {
+        return of({});
+      }
       return options?.registerFails
         ? throwError(() => new Error('Slug already taken'))
         : of({ spaceID: 'sp1', modules: ['sneatclub'], publicSlug: 'x' });
@@ -138,6 +141,11 @@ describe('RegisterSignInPageComponent', () => {
     const navigate = vi.spyOn(router, 'navigate');
     (fixture.componentInstance as unknown as { create(): void }).create();
 
+    const endpoints = calls.map((c) => c.endpoint);
+    expect(endpoints.indexOf('users/init_user_record')).toBeGreaterThanOrEqual(0);
+    expect(endpoints.indexOf('users/init_user_record')).toBeLessThan(
+      endpoints.indexOf('spaces/register_space'),
+    );
     const register = calls.find((c) => c.endpoint === 'spaces/register_space');
     expect(register?.body['extensionID']).toBe('sneatclub');
     expect(register?.body['requestID']).toBe('sneatclub-club-11111111-2222-3333-4444-555555555555');
