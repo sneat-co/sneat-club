@@ -1,0 +1,91 @@
+overrides:
+  # @sneat/* framework libraries — all on the version this app depends on.
+  '@sneat/api': 0.24.0
+  '@sneat/app': 0.24.0
+  '@sneat/auth-core': 0.24.0
+  '@sneat/auth-models': 0.24.0
+  '@sneat/auth-ui': 0.24.0
+  '@sneat/components': 0.24.0
+  '@sneat/core': 0.24.0
+  '@sneat/data': 0.24.0
+  '@sneat/datagrid': 0.24.0
+  '@sneat/dto': 0.24.0
+  '@sneat/grid': 0.24.0
+  '@sneat/logging': 0.24.0
+  '@sneat/space-components': 0.24.0
+  '@sneat/space-models': 0.24.0
+  '@sneat/space-services': 0.24.0
+  '@sneat/ui': 0.24.0
+  '@sneat/wizard': 0.24.0
+  # @angular/* runtime packages — the older extension peers pull 21.2.9, which
+  # fractures HttpParams and friends against this app's 21.2.19. Also collapses
+  # the second @angular/core variant that @angular/fire@20 ->
+  # @angular/platform-browser-dynamic@20 -> @angular/compiler@20 used to drag in.
+  '@angular/animations': 21.2.19
+  '@angular/common': 21.2.19
+  '@angular/compiler': 21.2.19
+  '@angular/core': 21.2.19
+  '@angular/forms': 21.2.19
+  '@angular/platform-browser': 21.2.19
+  '@angular/router': 21.2.19
+  # Ionic fractures the same way, and less obviously: with two Ionic versions in
+  # the tree pnpm instantiates @sneat/space-services TWICE at the SAME 0.24.0
+  # version — same version, different peer resolution — and ModuleSpaceItemService
+  # from one instance is not assignable to the other. Deduping the version alone
+  # is not enough; the peers have to agree too.
+  '@ionic/angular': 8.8.17
+  '@ionic/core': 8.8.17
+  # Dependabot CVE fixes forced onto transitive deps (firebase@12 / dev tooling).
+  # `>=` floors so pnpm resolves the highest compatible patched version rather
+  # than pinning. Prune an entry once the direct dep that pulls the vulnerable
+  # range is itself bumped past it. NOTE: esbuild + piscina are deliberately NOT
+  # overridden — they are pinned by @angular/build and forcing them regresses the
+  # Angular compiler build; they clear when Angular itself is bumped (blocked on a
+  # coordinated @angular/* + @ionic/angular upgrade — 21.2.17 breaks Ionic 8.8.6's
+  # proxy re-exports with NG3004).
+  '@babel/core': '>=7.29.6'
+  '@vitest/ui': '>=4.1.0'
+  form-data: '>=4.0.6'
+  vite: '>=7.3.5'
+  vitest: '>=4.1.0'
+  http-proxy-middleware: '>=3.0.7'
+  js-yaml: '>=4.2.0'
+  postcss: '>=8.5.10'
+  qs: '>=6.15.2'
+  tmp: '>=0.2.7'
+  undici: '>=7.28.0'
+  uuid: '>=11.1.1'
+  webpack-dev-server: '>=5.2.5'
+# Bound workspace-member discovery to the real source packages (root + libs).
+# Without this, pnpm globs every package.json — including dist/ build copies —
+# so `pnpm install` after a build fails with ERR_PNPM_OUTDATED_LOCKFILE.
+# landings/ is its own separate workspace and is intentionally excluded.
+packages:
+  - 'apps/*'
+  - 'libs/**'
+allowBuilds:
+  '@firebase/util': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  core-js: true
+  esbuild: true
+  less: true
+  lmdb: true
+  msgpackr-extract: true
+  nx: true
+  protobufjs: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@sneat/*'
+onlyBuiltDependencies:
+  - '@firebase/util'
+  - '@parcel/watcher'
+  - '@swc/core'
+  - core-js
+  - esbuild
+  - less
+  - lmdb
+  - msgpackr-extract
+  - nx
+  - protobufjs
+  - unrs-resolver

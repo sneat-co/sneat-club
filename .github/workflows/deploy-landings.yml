@@ -17,6 +17,8 @@ on:
     branches: [main]
     paths:
       - landings/**
+      - apps/**
+      - libs/**
       - .github/workflows/deploy-landings.yml
 
 concurrency:
@@ -29,8 +31,13 @@ jobs:
     with:
       working-directory: landings
       # astro.config.mjs hardcodes site: "https://sneat.club", so no
-      # PUBLIC_SITE_URL is threaded through here.
+      # PUBLIC_SITE_URL is threaded through here. `pnpm build` chains
+      # astro build -> nx build sneatclub-app (base-href /app/) -> assemble
+      # into dist/app, so one deploy ships the landing and the app together.
       build-command: pnpm build
       cloudflare-account-id: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      # The Angular app builds from the repo-root Nx workspace, which has its
+      # own pnpm install.
+      extra-install-directory: "."
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
