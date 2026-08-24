@@ -36,6 +36,8 @@ const ROUTES = [
   '/space/club/probe-club-id/venues',
   '/space/club/probe-club-id/gear',
   '/space/club/probe-club-id/lists',
+  '/space/team/probe-team-id',
+  '/space/team/probe-team-id/players',
   '/my',
 ];
 
