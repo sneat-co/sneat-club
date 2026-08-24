@@ -1,0 +1,16 @@
+{
+  "name": "@sneat/extension-sneatclub-contract",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "tags": ["domain:sneatclub", "layer:contract"],
+  "targets": {
+    "build": {
+      "executor": "nx:noop",
+      "comment": "Vendored prebuilt package (fesm2022 + types) — nothing to build. The no-op target also marks it buildable, which @nx/enforce-module-boundaries requires of anything the buildable runtime lib imports."
+    },
+    "lint": {
+      "executor": "nx:noop",
+      "comment": "Built artifacts are not lintable source; the real lint runs in the ext-sneatclub contract repo once it exists."
+    }
+  }
+}
