@@ -20,7 +20,7 @@
     "@sneat/api": "^0.22.1 || ^0.24.0",
     "@sneat/core": "^0.22.1 || ^0.24.0",
     "@sneat/dto": "^0.22.1 || ^0.24.0",
-    "@sneat/random": "^0.0.4",
+    "@sneat/random": ">=0.0.4 <1.0.0",
     "@sneat/space-components": "^0.22.1 || ^0.24.0",
     "@sneat/space-models": "^0.22.1 || ^0.24.0",
     "@sneat/space-services": "^0.22.1 || ^0.24.0",
