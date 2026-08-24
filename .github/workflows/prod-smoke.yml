@@ -1,0 +1,57 @@
+name: Production-bundle smoke
+
+# Builds the REAL production bundle, serves it, and walks every expected route
+# in Chromium, failing on any Angular runtime error in the console.
+#
+# Exists because a class of failure lives only in the production bundle:
+# duplicated pnpm peer instances shipped two copies of @sneat/ui — two
+# InjectionToken identities — and opening a club died with NG0201 in
+# production while every unit test stayed green. Unit tests prove logic; only
+# the built artifact proves the bundle.
+on:
+  pull_request:
+    paths:
+      - apps/**
+      - libs/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .github/workflows/prod-smoke.yml
+  push:
+    branches: [main]
+    paths:
+      - apps/**
+      - libs/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prod-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: build prod · walk routes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the production bundle
+        run: pnpm exec nx build sneatclub-app --base-href=/app/
+      - name: Install Chromium
+        run: pnpm exec playwright install chromium --with-deps
+      - name: Serve dist and walk every route
+        run: |
+          node tools/spa-server.mjs dist/apps/sneatclub-app/browser &
+          sleep 2
+          cd apps/sneatclub-app-e2e
+          BASE_URL=http://localhost:4299 pnpm exec playwright test src/prod-smoke.spec.ts --project=chromium --reporter=list
