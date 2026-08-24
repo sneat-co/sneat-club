@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="null" [defaultHref]="$defaultBackUrl()" />
+    </ion-buttons>
+    <ion-title
+      >🎽 Teams
+      @if ($space().brief?.title) {
+        &#64; {{ $space().brief?.title }}
+      }
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        [routerLink]="spacePageUrl('new-team')"
+        routerDirection="forward"
+      >
+        New team
+      </ion-button>
+      <ion-menu-button menu="mainMenu" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="last-child-no-border">
+    @if ($error(); as error) {
+      <ion-item lines="none">
+        <ion-text color="danger">{{ error }}</ion-text>
+      </ion-item>
+    } @else if ($teams(); as teams) {
+      @for (team of teams; track team.id) {
+        <ion-item
+          tappable
+          [routerLink]="'/space/' + team.type + '/' + team.id"
+          routerDirection="root"
+          detail="true"
+        >
+          <ion-label>{{ team.title }}</ion-label>
+        </ion-item>
+      } @empty {
+        <ion-item lines="none">
+          <ion-text color="medium">No teams yet.</ion-text>
+          <ion-button
+            slot="end"
+            [routerLink]="spacePageUrl('new-team')"
+            routerDirection="forward"
+          >
+            New team
+          </ion-button>
+        </ion-item>
+      }
+    } @else {
+      <ion-item lines="none">
+        <ion-skeleton-text [animated]="true" style="width: 60%" />
+      </ion-item>
+    }
+  </ion-card>
+</ion-content>

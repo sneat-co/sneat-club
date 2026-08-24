@@ -12,7 +12,6 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonNote,
   IonSelect,
   IonSelectOption,
   MenuController,
@@ -29,14 +28,14 @@ import { SpaceServiceModule } from '@sneat/space-services';
 import { zipMapBriefsWithIDs } from '@sneat/space-models';
 import { ClassName } from '@sneat/ui';
 import { takeUntil } from 'rxjs/operators';
-import { IListGroup, ISneatclubSpaceDbo } from '@sneat/extension-sneatclub-contract';
-import { builtInListGroups } from '../pages/lists/built-in-lists';
+import { clubMenuItems } from '../club-menu-items';
 
 // sneatclub-specific side menu rendered in the space "menu" outlet. Unlike the
 // generic @sneat SpaceMenuComponent (which hardcodes every sneat-app extension —
 // Assets, Budget, Calendar, Contacts, Debts, …, none of which exist in
-// sneatclub-app), this shows only what template has: a space selector (to switch
-// spaces, like sneat-app) and the selected space's lists.
+// sneatclub-app), this shows a space selector (to switch spaces, like
+// sneat-app) and the club's sections: Teams, Staff, Players, Parents, Venues,
+// Gear — the same items the overview page's Menu card renders.
 @Component({
   selector: 'sneatclub-space-menu',
   templateUrl: './sneatclub-space-menu.component.html',
@@ -50,7 +49,6 @@ import { builtInListGroups } from '../pages/lists/built-in-lists';
     IonSelectOption,
     IonIcon,
     IonLabel,
-    IonNote,
     AuthMenuItemComponent,
   ],
   providers: [
@@ -60,11 +58,11 @@ import { builtInListGroups } from '../pages/lists/built-in-lists';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SneatclubSpaceMenuComponent extends SpaceBaseComponent {
+  protected readonly menuItems = clubMenuItems;
   protected readonly $spaces = signal<
     readonly IIdAndBrief<IUserSpaceBrief>[] | undefined
   >(undefined);
   protected readonly $disabled = computed(() => !this.$spaceID());
-  protected readonly $listGroups = signal<IListGroup[]>([]);
 
   private readonly menuCtrl = inject(MenuController);
 
@@ -81,33 +79,6 @@ export class SneatclubSpaceMenuComponent extends SpaceBaseComponent {
           ),
         error: this.errorLogger.logErrorHandler('failed to get user state'),
       });
-    // Seed the built-in default lists (e.g. family To Buy / To Do) as soon as the
-    // space type is known from the URL, before the space document loads. Mirrors
-    // the lists page so the menu shows lists instantly; onSpaceDboChanged() below
-    // re-seeds + merges persisted lists once the DBO arrives.
-    this.spaceTypeChanged$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((spaceType) => {
-        if (spaceType && !this.$listGroups().length) {
-          this.$listGroups.set([...builtInListGroups(spaceType)]);
-        }
-      });
-  }
-
-  // Mirror the lists page: built-in defaults (family) + the lists persisted on
-  // the space DBO, deduped by group type.
-  protected override onSpaceDboChanged(): void {
-    super.onSpaceDboChanged();
-    const groups: IListGroup[] = this.space
-      ? [...builtInListGroups(this.space.type)]
-      : [];
-    const dbo = this.space?.dbo as unknown as ISneatclubSpaceDbo | undefined;
-    (dbo?.listGroups || []).forEach((g) => {
-      if (!groups.some((x) => x.type === g.type)) {
-        groups.push(g);
-      }
-    });
-    this.$listGroups.set(groups);
   }
 
   protected onSpaceSelected(event: Event): void {

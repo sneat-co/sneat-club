@@ -1,80 +1,88 @@
 import { Route } from '@angular/router';
-// import {AuthGuard} from '../../services/auth-guard.service';
-// import {guardRoute} from '../../utils/guard-route';
+import { IClubContactsRouteData } from './pages/contacts/club-contacts-page.component';
+
+// Staff/Players/Parents/Venues are one contacts page filtered by route data —
+// see ClubContactsPageComponent.
+const contactsPage = () =>
+  import('./pages/contacts/club-contacts-page.component').then(
+    (m) => m.ClubContactsPageComponent,
+  );
+
+const contactsData = (data: IClubContactsRouteData) => ({ ...data });
 
 export const sneatclubRoutes: Route[] = [
   {
+    path: 'teams',
+    data: { title: 'Teams' },
+    loadComponent: () =>
+      import('./pages/teams/teams-page.component').then(
+        (m) => m.TeamsPageComponent,
+      ),
+  },
+  {
+    path: 'new-team',
+    data: { title: 'New team' },
+    loadComponent: () =>
+      import('./pages/new-team/new-team-page.component').then(
+        (m) => m.NewTeamPageComponent,
+      ),
+  },
+  {
+    path: 'staff',
+    data: contactsData({
+      title: 'Staff',
+      emoji: '🧑‍🏫',
+      roles: ['staff', 'coach', 'admin', 'manager', 'director', 'owner', 'creator'],
+    }),
+    loadComponent: contactsPage,
+  },
+  {
+    path: 'players',
+    data: contactsData({ title: 'Players', emoji: '⚽', roles: ['player'] }),
+    loadComponent: contactsPage,
+  },
+  {
+    path: 'parents',
+    data: contactsData({
+      title: 'Parents',
+      emoji: '👪',
+      roles: ['parent', 'guardian'],
+    }),
+    loadComponent: contactsPage,
+  },
+  {
+    path: 'venues',
+    data: contactsData({
+      title: 'Venues',
+      emoji: '📍',
+      contactType: 'location',
+    }),
+    loadComponent: contactsPage,
+  },
+  {
+    path: 'gear',
+    data: { title: 'Gear' },
+    loadComponent: () =>
+      import('./pages/gear/gear-page.component').then(
+        (m) => m.GearPageComponent,
+      ),
+  },
+  // Lists are out of the menu for now (they never worked for clubs), but the
+  // routes stay reachable so existing links do not 404.
+  {
     path: 'lists',
     data: { title: 'Lists' },
-    // canActivate: [AuthGuard],
     loadComponent: () =>
       import('./pages/lists/lists-page.component').then(
         (m) => m.ListsPageComponent,
       ),
-    // ...guardRoute,
   },
   {
     path: 'list/:listType/:listID',
     data: { title: 'List' },
-    // canActivate: [AuthGuard],
     loadComponent: () =>
       import('./pages/list/list-page.component').then(
         (m) => m.ListPageComponent,
       ),
   },
-  // {   // TODO: How not to list dynamic components in routes?
-  // 	path: 'new-list-dialog',
-  // 	loadChildren: () => import('./pages/lists/new-list-dialog.module')
-  // 		.then(m => m.NewListDialogModule),
-  // 	// ...guardRoute,
-  // },
-  // {
-  // 	path: 'list/:id',
-  // 	// canActivate: [AuthGuard],
-  // 	loadChildren: () => import('./pages/list/list.module')
-  // 		.then(m => m.ListPageModule),
-  // },
-  // {
-  // 	path: 'recipe',
-  // 	// canActivate: [AuthGuard],
-  // 	loadChildren: () => import('./pages/list/list.module')
-  // 		.then(m => m.ListPageModule),
-  // },
-  // {
-  // 	path: 'recipe/:id',
-  // 	// canActivate: [AuthGuard],
-  // 	loadChildren: () => import('./pages/list/list.module')
-  // 		.then(m => m.ListPageModule),
-  // },
-  // {
-  // 	path: 'recipes',
-  // 	// canActivate: [AuthGuard],
-  // 	loadChildren: () => import('./pages/list/list.module')
-  // 		.then(m => m.ListPageModule),
-  // },
-  // {
-  // 	path: 'rspv',
-  // 	// canActivate: [AuthGuard],
-  // 	loadChildren: () => import('./pages/list/list.module')
-  // 		.then(m => m.ListPageModule),
-  // },
-  // {
-  // 	path: 'buy',
-  // 	// canActivate: [AuthGuard],
-  // 	loadChildren: () => import('./pages/list/list.module')
-  // 		.then(m => m.ListPageModule),
-  // 	// ...guardRoute,
-  // },
-  // {
-  // 	path: 'do',
-  // 	// canActivate: [AuthGuard],
-  // 	loadChildren: () => import('./pages/list/list.module')
-  // 		.then(m => m.ListPageModule),
-  // 	// ...guardRoute,
-  // },
-  // {
-  // 	path: 'movie-info',
-  // 	loadChildren: () => import('sneat-shared/extensions/sneatclub/pages/movie-info/movie-info-page.module')
-  // 		.then(m => m.MovieInfoPageModule),
-  // },
 ];

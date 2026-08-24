@@ -28,6 +28,14 @@ const ROUTES = [
   '/register/welcome',
   '/register/return',
   '/space/club/probe-club-id',
+  '/space/club/probe-club-id/teams',
+  '/space/club/probe-club-id/new-team',
+  '/space/club/probe-club-id/staff',
+  '/space/club/probe-club-id/players',
+  '/space/club/probe-club-id/parents',
+  '/space/club/probe-club-id/venues',
+  '/space/club/probe-club-id/gear',
+  '/space/club/probe-club-id/lists',
   '/my',
 ];
 
