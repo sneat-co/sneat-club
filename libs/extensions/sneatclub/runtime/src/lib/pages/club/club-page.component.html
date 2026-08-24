@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="light">
     <ion-title>
-      {{ $parentSpaceID() ? '🎽' : '⚽' }}
+      {{ $isTeam() ? '🎽' : '⚽' }}
       {{ $space().brief?.title || 'Club' }}
     </ion-title>
     <ion-buttons slot="end">
@@ -11,30 +11,36 @@
 </ion-header>
 
 <ion-content>
-  <!-- Which variant this space is (club vs team) is only known once the space
-       document loads — branching earlier would flash a team's page with the
-       club's Teams card. -->
-  @if (!$dboLoaded()) {
+  @if ($isTeam()) {
+    <!-- A team: no Teams card (teams have no sub-teams) — link up to the club
+         instead. The parent id comes from the space document; a skeleton
+         holds its place while that loads. -->
+    <ion-card class="last-child-no-border">
+      @if ($parentSpaceID(); as parentSpaceID) {
+        <ion-item
+          tappable
+          [routerLink]="'/space/club/' + parentSpaceID"
+          routerDirection="root"
+          detail="true"
+        >
+          <ion-icon name="arrow-up-outline" slot="start" />
+          <ion-label>
+            <ion-text color="medium">Club</ion-text>
+            <h2>{{ $parentTitle() || 'Open club' }}</h2>
+          </ion-label>
+        </ion-item>
+      } @else {
+        <ion-item lines="none">
+          <ion-skeleton-text [animated]="true" style="width: 60%" />
+        </ion-item>
+      }
+    </ion-card>
+  } @else if (!$dboLoaded()) {
+    <!-- Route says club, but pre-migration teams carry club-typed briefs —
+         wait for the space document before drawing the Teams card. -->
     <ion-card class="last-child-no-border">
       <ion-item lines="none">
         <ion-skeleton-text [animated]="true" style="width: 60%" />
-      </ion-item>
-    </ion-card>
-  } @else if ($parentSpaceID(); as parentSpaceID) {
-    <!-- A team: no Teams card (teams have no sub-teams) — link up to the club
-         instead. -->
-    <ion-card class="last-child-no-border">
-      <ion-item
-        tappable
-        [routerLink]="'/space/club/' + parentSpaceID"
-        routerDirection="root"
-        detail="true"
-      >
-        <ion-icon name="arrow-up-outline" slot="start" />
-        <ion-label>
-          <ion-text color="medium">Club</ion-text>
-          <h2>{{ $parentTitle() || 'Open club' }}</h2>
-        </ion-label>
       </ion-item>
     </ion-card>
   } @else {
@@ -79,7 +85,7 @@
 
   <!-- The side menu's items, as a card — only below the lg breakpoint, where
        the split pane collapses and the side menu hides behind the burger. -->
-  @if ($dboLoaded()) {
+  @if ($isTeam() || $dboLoaded()) {
     <ion-card class="ion-hide-lg-up last-child-no-border">
       <ion-item color="divider" lines="full">
         <ion-label color="medium">Menu</ion-label>

@@ -67,16 +67,19 @@ export class ClubPageComponent extends SpaceBaseComponent {
   protected readonly $teams = signal<IChildSpaceBrief[] | undefined>(undefined);
   protected readonly $teamsError = signal<string | undefined>(undefined);
 
-  // A team is a child Space: same space TYPE as the club, but with a parent.
-  // Until the space document loads we don't know which variant to render, so
-  // templates must gate on $dboLoaded before branching on $parentSpaceID —
-  // otherwise a team flashes the club's Teams card while loading.
+  // A team is a child Space with its own space type — the URL says which
+  // variant to render before the space document loads. The parentSpaceID
+  // fallback covers pre-migration records whose briefs still say 'club'.
   protected readonly $dboLoaded = computed(() => !!this.$space().dbo);
   protected readonly $parentSpaceID = computed(
     () => this.$space().dbo?.parentSpaceID,
   );
+  protected readonly $isTeam = computed(
+    () =>
+      (this.$spaceType() as string) === 'team' || !!this.$parentSpaceID(),
+  );
   protected readonly $menuItems = computed(() =>
-    clubMenuItemsFor(!!this.$parentSpaceID()),
+    clubMenuItemsFor(this.$isTeam()),
   );
   // The parent club's title, when the current user is a member of it.
   private readonly $userSpaceTitles = signal<Record<string, string>>({});

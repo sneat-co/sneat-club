@@ -60,12 +60,17 @@ import { clubSpacesOnly } from '../club-spaces';
 })
 export class SneatclubSpaceMenuComponent extends SpaceBaseComponent {
   // A team (child Space) has no sub-teams — its menu drops the Teams entry
-  // and gains a link up to the club (rendered in the template).
+  // and gains a link up to the club (rendered in the template). The URL's
+  // space type answers instantly; parentSpaceID covers pre-migration briefs.
   protected readonly $parentSpaceID = computed(
     () => this.$space().dbo?.parentSpaceID,
   );
+  protected readonly $isTeam = computed(
+    () =>
+      (this.$spaceType() as string) === 'team' || !!this.$parentSpaceID(),
+  );
   protected readonly $menuItems = computed(() =>
-    clubMenuItemsFor(!!this.$parentSpaceID()),
+    clubMenuItemsFor(this.$isTeam()),
   );
   protected readonly $spaces = signal<
     readonly IIdAndBrief<IUserSpaceBrief>[] | undefined
