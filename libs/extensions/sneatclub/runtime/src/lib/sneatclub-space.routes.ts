@@ -16,7 +16,11 @@ export const sneatclubSpaceRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'lists',
+        data: { title: 'Club' },
+        loadComponent: () =>
+          import('./pages/club/club-page.component').then(
+            (m) => m.ClubPageComponent,
+          ),
       },
       ...sneatclubRoutes,
     ],

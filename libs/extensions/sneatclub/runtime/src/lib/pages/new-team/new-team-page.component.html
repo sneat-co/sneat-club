@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="null" [defaultHref]="spacePageUrl('teams')" />
+    </ion-buttons>
+    <ion-title
+      >🎽 New team
+      @if ($space().brief?.title) {
+        &#64; {{ $space().brief?.title }}
+      }
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="mainMenu" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="last-child-no-border">
+    <ion-item>
+      <ion-input
+        label="Team name"
+        labelPlacement="floating"
+        placeholder="e.g. Girls U14"
+        [(ngModel)]="title"
+        [disabled]="$creating()"
+        (keyup.enter)="create()"
+      />
+    </ion-item>
+    @if ($error(); as error) {
+      <ion-item lines="none">
+        <ion-text color="danger">{{ error }}</ion-text>
+      </ion-item>
+    }
+    <ion-item lines="none">
+      <ion-button
+        (click)="create()"
+        [disabled]="!title.trim() || $creating()"
+        size="default"
+      >
+        {{ $creating() ? 'Creating…' : 'Create team' }}
+      </ion-button>
+    </ion-item>
+  </ion-card>
+</ion-content>

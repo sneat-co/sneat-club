@@ -29,34 +29,18 @@
     </ion-select>
   </ion-item>
 
-  <!-- Lists of the selected space. -->
-  <ion-item
-    tappable
-    [routerLink]="spacePageUrl('lists')"
-    routerDirection="root"
-    [disabled]="$disabled()"
-    (click)="closeMenu()"
-  >
-    <ion-icon name="list-outline" slot="start" />
-    <ion-label>Lists</ion-label>
-  </ion-item>
-
-  @for (group of $listGroups(); track group.id) {
-    @for (list of group.lists || []; track list.id) {
-      <ion-item
-        tappable
-        class="ion-padding-start"
-        [routerLink]="spacePageUrl('list/' + list.type + '/' + list.id)"
-        routerDirection="root"
-        [disabled]="$disabled()"
-        (click)="closeMenu()"
-      >
-        @if (list.emoji) {
-          <ion-note slot="start">{{ list.emoji }}</ion-note>
-        }
-        <ion-label>{{ list.title || list.id }}</ion-label>
-      </ion-item>
-    }
+  <!-- The club's sections — the same items the overview's Menu card shows. -->
+  @for (item of menuItems; track item.path) {
+    <ion-item
+      tappable
+      [routerLink]="spacePageUrl(item.path)"
+      routerDirection="root"
+      [disabled]="$disabled()"
+      (click)="closeMenu()"
+    >
+      <ion-icon [name]="item.icon" slot="start" />
+      <ion-label>{{ item.title }}</ion-label>
+    </ion-item>
   }
 
   <sneat-auth-menu-item />

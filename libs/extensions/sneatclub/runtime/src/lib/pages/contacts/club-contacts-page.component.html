@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="null" [defaultHref]="$defaultBackUrl()" />
+    </ion-buttons>
+    <ion-title
+      >{{ $pageData().emoji }} {{ $pageData().title }}
+      @if ($space().brief?.title) {
+        &#64; {{ $space().brief?.title }}
+      }
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="mainMenu" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="last-child-no-border">
+    @if ($error(); as error) {
+      <ion-item lines="none">
+        <ion-text color="danger">{{ error }}</ion-text>
+      </ion-item>
+    } @else if ($contacts(); as contacts) {
+      @for (contact of contacts; track contact.id) {
+        <ion-item>
+          <ion-label>{{ contactTitle(contact) }}</ion-label>
+        </ion-item>
+      } @empty {
+        <ion-item lines="none">
+          <ion-text color="medium"
+            >No {{ $pageData().title.toLowerCase() }} listed yet.</ion-text
+          >
+        </ion-item>
+      }
+    } @else {
+      <ion-item lines="none">
+        <ion-skeleton-text [animated]="true" style="width: 60%" />
+      </ion-item>
+    }
+  </ion-card>
+</ion-content>

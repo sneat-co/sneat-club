@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-title>
+      ⚽ {{ $space().brief?.title || 'Club' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="mainMenu" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="last-child-no-border">
+    <ion-item
+      color="divider"
+      lines="full"
+      tappable
+      [routerLink]="spacePageUrl('teams')"
+      routerDirection="root"
+      detail="true"
+    >
+      <ion-icon name="shirt-outline" slot="start" />
+      <ion-label color="medium">Teams</ion-label>
+    </ion-item>
+    @if ($teamsError(); as teamsError) {
+      <ion-item lines="none">
+        <ion-text color="danger">{{ teamsError }}</ion-text>
+      </ion-item>
+    } @else if ($teams(); as teams) {
+      @for (team of teams; track team.id) {
+        <ion-item
+          tappable
+          [routerLink]="'/space/' + team.type + '/' + team.id"
+          routerDirection="root"
+          detail="true"
+        >
+          <ion-label>{{ team.title }}</ion-label>
+        </ion-item>
+      } @empty {
+        <ion-item lines="none">
+          <ion-text color="medium">No teams yet.</ion-text>
+        </ion-item>
+      }
+    } @else {
+      <ion-item lines="none">
+        <ion-skeleton-text [animated]="true" style="width: 60%" />
+      </ion-item>
+    }
+  </ion-card>
+
+  <!-- The side menu's items, as a card — only below the lg breakpoint, where
+       the split pane collapses and the side menu hides behind the burger. -->
+  <ion-card class="ion-hide-lg-up last-child-no-border">
+    <ion-item color="divider" lines="full">
+      <ion-label color="medium">Menu</ion-label>
+    </ion-item>
+    @for (item of menuItems; track item.path) {
+      <ion-item
+        tappable
+        [routerLink]="spacePageUrl(item.path)"
+        routerDirection="root"
+        detail="true"
+      >
+        <ion-icon [name]="item.icon" slot="start" />
+        <ion-label>{{ item.title }}</ion-label>
+      </ion-item>
+    }
+  </ion-card>
+</ion-content>

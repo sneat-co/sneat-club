@@ -1,5 +1,5 @@
 import { SNEATCLUB_SERVICE } from '@sneat/extension-sneatclub-contract';
-import { ListService } from './services';
+import { ChildSpacesService, ListService } from './services';
 import { provideSneatclub } from './provide-sneatclub';
 
 describe('provideSneatclub', () => {
@@ -10,5 +10,9 @@ describe('provideSneatclub', () => {
       provide: SNEATCLUB_SERVICE,
       useExisting: ListService,
     });
+  });
+
+  it('provides ChildSpacesService for the Teams pages', () => {
+    expect(provideSneatclub()).toContain(ChildSpacesService);
   });
 });

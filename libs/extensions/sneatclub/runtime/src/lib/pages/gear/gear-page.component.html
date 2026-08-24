@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="null" [defaultHref]="$defaultBackUrl()" />
+    </ion-buttons>
+    <ion-title
+      >🎾 Gear
+      @if ($space().brief?.title) {
+        &#64; {{ $space().brief?.title }}
+      }
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="mainMenu" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="last-child-no-border">
+    <ion-item lines="none">
+      <ion-text color="medium">
+        No gear tracked yet. Gear (balls, kits, nets — the club's assets) will
+        be managed here.
+      </ion-text>
+    </ion-item>
+  </ion-card>
+</ion-content>
