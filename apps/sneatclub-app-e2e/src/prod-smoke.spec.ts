@@ -50,11 +50,19 @@ for (const route of ROUTES) {
       }
     });
 
-    await page.goto(route, { waitUntil: 'networkidle' });
-    // Give lazy chunks + route activation time to surface DI failures.
-    await page.waitForTimeout(2500);
+    await page.goto(route);
+    await expect(page.locator('ion-app')).toBeVisible();
+    // Wait until Angular reports the app settled — lazy chunks loaded, route
+    // activation finished — so late DI failures have surfaced. Deterministic,
+    // unlike a sleep. Testability is exposed in production builds by default.
+    await page.waitForFunction(() => {
+      const w = window as unknown as {
+        getAllAngularTestabilities?: () => { isStable(): boolean }[];
+      };
+      const all = w.getAllAngularTestabilities?.();
+      return !all || all.every((t) => t.isStable());
+    });
 
-    expect(page.locator('ion-app')).toBeTruthy();
     expect(errors, `Angular errors on ${route}:\n${errors.join('\n')}`).toEqual([]);
   });
 }
