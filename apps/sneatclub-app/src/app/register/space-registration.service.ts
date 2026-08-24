@@ -2,6 +2,34 @@ import { inject, Injectable } from '@angular/core';
 import { SneatApiService } from '@sneat/api';
 import { Observable, map } from 'rxjs';
 
+/** What ensureUserRecord needs to know about the signed-in account. */
+export interface IAuthUserSnapshot {
+  readonly email?: string | null;
+  readonly emailVerified?: boolean;
+  readonly providerId?: string;
+  readonly displayName?: string | null;
+}
+
+/**
+ * The honest message out of a failed Sneat API call. Angular's
+ * HttpErrorResponse is NOT an instanceof Error, so `err.message` guards hid
+ * every real backend error behind the generic fallback — which is exactly how
+ * a missing-user-record 500 reached an operator as "please try again".
+ */
+export function registrationErrorMessage(err: unknown, fallback: string): string {
+  if (err && typeof err === 'object') {
+    const e = err as { error?: { error?: { message?: string }; message?: string }; message?: string };
+    const apiMessage = e.error?.error?.message || e.error?.message;
+    if (apiMessage) {
+      return apiMessage;
+    }
+    if (typeof e.message === 'string' && e.message) {
+      return e.message;
+    }
+  }
+  return fallback;
+}
+
 /**
  * The extension id sneat.club registers Spaces under. The backend reads it
  * to find this product's registration profile, which supplies the space type
@@ -57,6 +85,40 @@ interface IListManageableResponse {
 @Injectable({ providedIn: 'root' })
 export class SpaceRegistrationService {
   private readonly api = inject(SneatApiService);
+  private userRecordEnsured = false;
+
+  /**
+   * Creates the users/{uid} record if it does not exist yet.
+   *
+   * The full Sneat apps do this reactively (SneatUserService watches the user
+   * doc and posts users/init_user_record when it is absent); the registration
+   * wizard bypasses that machinery, and its audience is precisely NEW
+   * accounts — whose first ever API call is register_space, which requires
+   * the record and 500s without it. So the wizard creates it explicitly,
+   * right before registering. The endpoint is idempotent (create-if-missing).
+   */
+  public ensureUserRecord(user: IAuthUserSnapshot): Observable<unknown> {
+    if (this.userRecordEnsured) {
+      return new Observable((subscriber) => {
+        subscriber.next(undefined);
+        subscriber.complete();
+      });
+    }
+    const request: Record<string, unknown> = {
+      email: user.email || undefined,
+      emailIsVerified: user.emailVerified ?? false,
+      authProvider: user.providerId || undefined,
+    };
+    if (user.displayName) {
+      request['names'] = { fullName: user.displayName };
+    }
+    return this.api.post<unknown>('users/init_user_record', request).pipe(
+      map((result) => {
+        this.userRecordEnsured = true;
+        return result;
+      }),
+    );
+  }
 
   /**
    * Registers a club. One call creates the Space, records the
