@@ -53,7 +53,6 @@
     "firebase": "12.17.1",
     "ionicons": "^8.0.13",
     "rxjs": "~7.8.2",
-    "zone.js": "0.16.2",
     "@stripe/stripe-js": "^9.0.0",
     "@sentry/angular": "^10.0.0",
     "posthog-js": "^1.200.0"
