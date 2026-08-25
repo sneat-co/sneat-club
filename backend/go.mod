@@ -1,6 +1,6 @@
 module github.com/sneat-co/sneat-club/backend
 
-go 1.25.0
+go 1.27.0
 
 require github.com/sneat-co/sneat-go-core v0.66.0
 
