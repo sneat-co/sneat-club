@@ -17,6 +17,14 @@ describe('sneatclubRoutes', () => {
     expect(sneatclubRoutes.some((r) => r.path === 'new-team')).toBe(true);
   });
 
+  it('exposes the invite route, and Players/Parents point at it', () => {
+    expect(sneatclubRoutes.some((r) => r.path === 'invite/:role')).toBe(true);
+    const players = sneatclubRoutes.find((r) => r.path === 'players');
+    expect(players?.data?.['inviteRole']).toBe('player');
+    const parents = sneatclubRoutes.find((r) => r.path === 'parents');
+    expect(parents?.data?.['inviteRole']).toBe('parent');
+  });
+
   it('keeps the lists routes reachable even though they left the menu', () => {
     expect(sneatclubRoutes.some((r) => r.path === 'lists')).toBe(true);
     expect(

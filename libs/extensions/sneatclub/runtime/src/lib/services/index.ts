@@ -1,4 +1,5 @@
 export * from './child-spaces.service';
+export * from './team-invites.service';
 export * from './emojis';
 export * from './emojis-loader.service';
 export * from './sneatclub-app-state.service';

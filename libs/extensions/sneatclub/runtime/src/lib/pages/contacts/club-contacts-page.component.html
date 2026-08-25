@@ -10,6 +10,14 @@
       }
     </ion-title>
     <ion-buttons slot="end">
+      @if ($pageData().inviteRole; as inviteRole) {
+        <ion-button
+          [routerLink]="spacePageUrl('invite/' + inviteRole)"
+          routerDirection="forward"
+        >
+          Invite
+        </ion-button>
+      }
       <ion-menu-button menu="mainMenu" />
     </ion-buttons>
   </ion-toolbar>

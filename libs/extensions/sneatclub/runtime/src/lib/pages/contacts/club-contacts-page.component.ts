@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {
   IonBackButton,
+  IonButton,
   IonButtons,
   IonCard,
   IonContent,
@@ -23,6 +24,7 @@ import {
   CONTACTUS_SPACE_SERVICE,
   IContactBrief,
 } from '@sneat/extension-contactus-contract';
+import { RouterLink } from '@angular/router';
 import {
   SpaceBaseComponent,
   SpaceComponentBaseParams,
@@ -42,6 +44,8 @@ export interface IClubContactsRouteData {
   readonly emoji: string;
   readonly roles?: readonly string[];
   readonly contactType?: string;
+  // When set, the page header offers "Invite" → the invite/:role page.
+  readonly inviteRole?: 'player' | 'parent';
 }
 
 @Component({
@@ -49,7 +53,9 @@ export interface IClubContactsRouteData {
   templateUrl: './club-contacts-page.component.html',
   imports: [
     SpaceServiceModule,
+    RouterLink,
     IonBackButton,
+    IonButton,
     IonButtons,
     IonCard,
     IonContent,
