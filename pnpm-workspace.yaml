@@ -42,6 +42,13 @@ overrides:
   '@angular/forms': 22.1.3
   '@angular/platform-browser': 22.1.3
   '@angular/router': 22.1.3
+  # @angular/fire@20.0.1 has no Angular-22-compatible release yet (its "next"
+  # tag still targets Angular 21) and peer-deps on
+  # @angular/platform-browser-dynamic@^20.0.0. This app bootstraps zoneless via
+  # bootstrapApplication and never imports platform-browser-dynamic anywhere,
+  # so it's a dead, unused package in the tree — pin it to the app's Angular
+  # minor rather than carry a stray sub-22 Angular package.
+  '@angular/platform-browser-dynamic': 22.1.3
   # Ionic fractures the same way, and less obviously: with two Ionic versions in
   # the tree pnpm instantiates @sneat/space-services TWICE at the SAME 0.26.4
   # version — same version, different peer resolution — and ModuleSpaceItemService
@@ -49,17 +56,21 @@ overrides:
   # is not enough; the peers have to agree too.
   '@ionic/angular': 9.0.0
   '@ionic/core': 9.0.0
-  # Same fracture again, one layer deeper: @angular/fire@20's bundled
-  # @angular-devkit/schematics@20.3.32 / @angular-devkit/core@20.3.32 has an
-  # optional peer on chokidar that pnpm resolved to 4.0.3 via one importer
-  # (@sneat/extension-sneatclub) and 5.0.0 via another (the app root) —
+  # Same fracture again, one layer deeper: @angular/fire@20 bundles
+  # @schematics/angular@^20.0.0 / @angular-devkit/schematics@^20.0.0, which in
+  # turn drags in @angular-devkit/core@20.3.32. That older devkit/schematics
+  # pair used to have its own optional chokidar peer resolve to two different
+  # versions (4.0.3 via @sneat/extension-sneatclub, 5.0.0 via the app root),
   # forking @angular/fire -> @sneat/logging -> @sneat/ui into two physical
-  # instances with two different ClassName InjectionToken objects. Prod-only
-  # NG0201 on every /space/* route (dev-mode module resolution collapses the
-  # duplicates, so unit tests stayed green). Pin the peer to the version
-  # every other consumer in the tree already resolves to (5.0.0) so the v20
-  # schematics fork collapses back into the rest of the graph.
-  '@angular-devkit/core@20.3.32>chokidar': 5.0.0
+  # instances with two different ClassName InjectionToken objects — prod-only
+  # NG0201 on every /space/* route (dev-mode module resolution collapsed the
+  # duplicates, so unit tests stayed green). Pinning the devkit trio outright
+  # to this repo's @angular/build minor removes the v20 instances entirely, so
+  # the chokidar-peer override that used to paper over the fork is no longer
+  # needed.
+  '@angular-devkit/core': 22.1.5
+  '@angular-devkit/schematics': 22.1.5
+  '@schematics/angular': 22.1.5
   # Dependabot CVE fixes forced onto transitive deps (firebase@12 / dev tooling).
   # `>=` floors so pnpm resolves the highest compatible patched version rather
   # than pinning. Prune an entry once the direct dep that pulls the vulnerable
