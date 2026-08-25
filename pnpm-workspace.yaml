@@ -49,6 +49,17 @@ overrides:
   # is not enough; the peers have to agree too.
   '@ionic/angular': 9.0.0
   '@ionic/core': 9.0.0
+  # Same fracture again, one layer deeper: @angular/fire@20's bundled
+  # @angular-devkit/schematics@20.3.32 / @angular-devkit/core@20.3.32 has an
+  # optional peer on chokidar that pnpm resolved to 4.0.3 via one importer
+  # (@sneat/extension-sneatclub) and 5.0.0 via another (the app root) —
+  # forking @angular/fire -> @sneat/logging -> @sneat/ui into two physical
+  # instances with two different ClassName InjectionToken objects. Prod-only
+  # NG0201 on every /space/* route (dev-mode module resolution collapses the
+  # duplicates, so unit tests stayed green). Pin the peer to the version
+  # every other consumer in the tree already resolves to (5.0.0) so the v20
+  # schematics fork collapses back into the rest of the graph.
+  '@angular-devkit/core@20.3.32>chokidar': 5.0.0
   # Dependabot CVE fixes forced onto transitive deps (firebase@12 / dev tooling).
   # `>=` floors so pnpm resolves the highest compatible patched version rather
   # than pinning. Prune an entry once the direct dep that pulls the vulnerable
