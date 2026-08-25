@@ -33,11 +33,13 @@ import { SneatApiService } from '@sneat/api';
 import { SneatAuthStateService } from '@sneat/auth-core';
 import { switchMap } from 'rxjs/operators';
 
+// Shape verified against the deployed API: the space id lives at the ROOT
+// (spaceID), not inside `space` — the published lib's IJoinSpaceInfoResponse
+// disagrees with the wire format there.
 interface IJoinInfo {
-  readonly space: { readonly id: string; readonly type: string; readonly title: string };
+  readonly spaceID: string;
+  readonly space: { readonly type: string; readonly title: string };
   readonly invite: {
-    readonly id: string;
-    readonly pin: string;
     readonly status?: string;
     readonly message?: string;
     readonly from?: { readonly title?: string };
@@ -140,11 +142,7 @@ export class JoinPageComponent {
         pin: this.pin,
       })
       .subscribe({
-        next: (info) =>
-          this.$info.set({
-            ...info,
-            invite: { ...info.invite, id: this.inviteID, pin: this.pin },
-          }),
+        next: (info) => this.$info.set(info),
         error: () =>
           this.$loadError.set(
             'We could not find this invite. It may have been withdrawn or already used.',
@@ -197,16 +195,21 @@ export class JoinPageComponent {
       })
       .pipe(
         switchMap(() =>
-          this.api.post('space/join_space', {
-            spaceID: info.space.id,
+          // accept_personal_invite is the CLAIM path: it links the invitee's
+          // account to the invite's member contact (roles included) and adds
+          // them to the space. space/join_space is a members-only operation
+          // and 401s for the invitee — verified against prod.
+          this.api.post('invites/accept_personal_invite', {
+            spaceID: info.spaceID,
             inviteID: this.inviteID,
             pin: this.pin,
+            operation: 'accept',
           }),
         ),
       )
       .subscribe({
         next: () => {
-          void this.router.navigate(['space', info.space.type, info.space.id]);
+          void this.router.navigate(['space', info.space.type, info.spaceID]);
         },
         error: (err: unknown) => {
           this.$joining.set(false);
