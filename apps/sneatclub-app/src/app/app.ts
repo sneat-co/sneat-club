@@ -81,6 +81,8 @@ export class App extends BaseAppComponent {
   private readonly isFocusedRoute = computed(
     () =>
       this.currentUrl().startsWith('/register') ||
+      // Invite links open for people who are not members yet — no app chrome.
+      this.currentUrl().startsWith('/join') ||
       // The login page with the side pane open showed a weird, empty panel —
       // there is nothing to put in a menu before sign-in.
       this.currentUrl().startsWith('/login'),

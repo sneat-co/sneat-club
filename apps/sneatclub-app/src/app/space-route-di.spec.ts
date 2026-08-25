@@ -7,6 +7,7 @@ import { SneatApp } from '@sneat/core';
 import { provideContactus } from '@sneat/extension-contactus';
 import { SneatUserService } from '@sneat/auth-core';
 import { provideSneatclub } from '@sneat/extension-sneatclub';
+import { RandomIdService } from '@sneat/random';
 import { BehaviorSubject } from 'rxjs';
 import { sneatclubAppEnvironmentConfig } from '../environments/environment';
 import { appRoutes } from './app.routes';
@@ -34,6 +35,7 @@ describe('space route DI', () => {
         // under the SAME providers production bootstraps with.
         ...getStandardSneatProviders(sneatclubAppEnvironmentConfig),
         ...provideContactus(),
+        RandomIdService,
         ...provideSneatclub(),
         provideAppInfo({ appId: 'sneatclub' as SneatApp, appTitle: 'Sneat Club' }),
         provideRouter(appRoutes),

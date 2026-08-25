@@ -24,6 +24,13 @@ export const appRoutes: Route[] = [
       import('./space/sneatclub-space.routes').then((m) => m.sneatclubSpaceRoutes),
   },
   {
+    // The landing for invite links: /join/team?id=<inviteID>#pin=<pin>.
+    // Unguarded — the invite preview shows before sign-in (see JoinPageComponent).
+    path: 'join/:spaceType',
+    loadComponent: () =>
+      import('./join/join-page.component').then((m) => m.JoinPageComponent),
+  },
+  {
     // Register your club — the unified space-registration wizard
     // (sneat-specs decision 0006): form first, sign-in at the commit point
     // with the visitor's data still on screen, then plan, then onboarding.

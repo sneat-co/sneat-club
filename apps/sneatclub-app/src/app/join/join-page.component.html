@@ -1,0 +1,117 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <a class="wordmark" href="https://sneat.club">Sneat&nbsp;<span>Club</span></a>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="focused">
+    @if ($loadError(); as loadError) {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Invite not found</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-text color="medium">{{ loadError }}</ion-text>
+        </ion-card-content>
+      </ion-card>
+    } @else if ($info(); as info) {
+      <ion-card class="preview">
+        <ion-card-header>
+          <ion-card-title>{{ info.space.title }}</ion-card-title>
+          <ion-card-subtitle>
+            @if (info.invite.to?.title) {
+              {{ info.invite.to?.title }} — you are invited
+              @if (info.invite.from?.title) {
+                by {{ info.invite.from?.title }}
+              }
+            } @else {
+              You are invited to join
+            }
+          </ion-card-subtitle>
+        </ion-card-header>
+        @if (info.invite.message) {
+          <ion-card-content>
+            <ion-text color="medium">“{{ info.invite.message }}”</ion-text>
+          </ion-card-content>
+        }
+      </ion-card>
+
+      @if (!isAuthenticated()) {
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>One step left</ion-card-title>
+            <ion-card-subtitle>
+              Sign in or sign up to accept the invite
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button expand="block" (click)="signInWithGoogle()">
+              Continue with Google
+            </ion-button>
+            <ion-item>
+              <ion-input
+                label="Email"
+                labelPlacement="stacked"
+                type="email"
+                autocomplete="email"
+                [(ngModel)]="email"
+              />
+            </ion-item>
+            <ion-item>
+              <ion-input
+                label="Password"
+                labelPlacement="stacked"
+                type="password"
+                [autocomplete]="signUpMode() ? 'new-password' : 'current-password'"
+                [(ngModel)]="password"
+              />
+            </ion-item>
+            <ion-button
+              expand="block"
+              fill="outline"
+              [disabled]="!email || !password"
+              (click)="continueWithEmail()"
+            >
+              {{ signUpMode() ? 'Sign up with email' : 'Sign in with email' }}
+            </ion-button>
+            <ion-button fill="clear" size="small" (click)="toggleSignUp()">
+              {{
+                signUpMode()
+                  ? 'Already have an account? Sign in'
+                  : 'New here? Sign up'
+              }}
+            </ion-button>
+            @if (authError()) {
+              <ion-note color="danger">{{ authError() }}</ion-note>
+            }
+          </ion-card-content>
+        </ion-card>
+      } @else {
+        <ion-card>
+          <ion-card-content>
+            <ion-note>Signed in as {{ signedInAs() }}</ion-note>
+            <ion-button expand="block" [disabled]="$joining()" (click)="join()">
+              @if ($joining()) {
+                <ion-spinner name="dots" />
+              } @else {
+                Join {{ info.space.title }}
+              }
+            </ion-button>
+            @if ($joinError(); as joinError) {
+              <ion-note color="danger">{{ joinError }}</ion-note>
+            }
+          </ion-card-content>
+        </ion-card>
+      }
+    } @else {
+      <ion-card>
+        <ion-card-content>
+          <ion-spinner name="dots" />
+          <ion-text color="medium"> Loading your invite…</ion-text>
+        </ion-card-content>
+      </ion-card>
+    }
+  </div>
+</ion-content>

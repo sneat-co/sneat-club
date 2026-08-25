@@ -28,6 +28,14 @@ export const sneatclubRoutes: Route[] = [
       ),
   },
   {
+    path: 'invite/:role',
+    data: { title: 'Invite' },
+    loadComponent: () =>
+      import('./pages/invite/invite-member-page.component').then(
+        (m) => m.InviteMemberPageComponent,
+      ),
+  },
+  {
     path: 'staff',
     data: contactsData({
       title: 'Staff',
@@ -38,7 +46,12 @@ export const sneatclubRoutes: Route[] = [
   },
   {
     path: 'players',
-    data: contactsData({ title: 'Players', emoji: '⚽', roles: ['player'] }),
+    data: contactsData({
+      title: 'Players',
+      emoji: '⚽',
+      roles: ['player'],
+      inviteRole: 'player',
+    }),
     loadComponent: contactsPage,
   },
   {
@@ -47,6 +60,7 @@ export const sneatclubRoutes: Route[] = [
       title: 'Parents',
       emoji: '👪',
       roles: ['parent', 'guardian'],
+      inviteRole: 'parent',
     }),
     loadComponent: contactsPage,
   },
