@@ -16,7 +16,7 @@ import {
   IonNote,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { SneatUserService } from '@sneat/auth-core';
 import { UserRequiredFieldsService } from '@sneat/auth-ui';
 import { ISpaceContext } from '@sneat/space-models';

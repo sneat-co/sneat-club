@@ -24,7 +24,7 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { SneatAuthStateService } from '@sneat/auth-core';
 import { switchMap } from 'rxjs';
 import {

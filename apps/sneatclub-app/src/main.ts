@@ -1,5 +1,6 @@
 // Main entry point for sneatclub.app
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import {
   getStandardSneatProviders,
@@ -17,6 +18,8 @@ import { registerIonicons } from './register-ionicons';
 
 bootstrapApplication(App, {
   providers: [
+    // Keep Angular's zoneless scheduler explicit for the Angular 22 migration.
+    provideZonelessChangeDetection(),
     ...getStandardSneatProviders(sneatclubAppEnvironmentConfig),
     // Bind the template contract token (SNEATCLUB_SERVICE) to its concrete
     // implementation. The app is the composition root and may wire the runtime.

@@ -16,7 +16,7 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictSneatclubs": true
+    "strictTemplates": true
   },
   "files": [],
   "include": [],

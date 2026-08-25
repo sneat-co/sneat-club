@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     environmentOptions: { jsdom: { url: 'http://localhost/' } },
+    setupFiles: ['./apps/sneatclub-app/src/test-setup.ts'],
     // Ionic's icon lazy-loader tries to fetch SVGs in jsdom and throws benign
     // async "Invalid URL" / fetch errors when components with icons render in
     // specs. All assertions still pass; don't let these unhandled async errors
