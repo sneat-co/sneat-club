@@ -1,6 +1,7 @@
 import { Provider } from '@angular/core';
+import { MemberInvitesService } from '@sneat/extension-contactus-ui';
 import { SNEATCLUB_SERVICE } from '@sneat/extension-sneatclub-contract';
-import { ChildSpacesService, ListService, TeamInvitesService } from './services';
+import { ChildSpacesService, ListService } from './services';
 
 // The extension's single root register function: binds EVERY always-on contract
 // token to its concrete implementation in one place, so a host enables the whole
@@ -17,7 +18,9 @@ export function provideSneatclub(): Provider[] {
   return [
     ListService,
     ChildSpacesService,
-    TeamInvitesService,
+    // Inviting a player/parent/staff member is the generic contactus flow —
+    // the club used to carry its own copy of this service.
+    MemberInvitesService,
     { provide: SNEATCLUB_SERVICE, useExisting: ListService },
   ];
 }

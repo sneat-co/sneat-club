@@ -28,10 +28,13 @@ export const sneatclubRoutes: Route[] = [
       ),
   },
   {
+    // The invite page is the SHARED one from contactus — the role comes from
+    // this param, so the club's role vocabulary (player/parent/staff) lives
+    // here in the routing and the page itself stays product-neutral.
     path: 'invite/:role',
     data: { title: 'Invite' },
     loadComponent: () =>
-      import('./pages/invite/invite-member-page.component').then(
+      import('@sneat/extension-contactus-ui').then(
         (m) => m.InviteMemberPageComponent,
       ),
   },

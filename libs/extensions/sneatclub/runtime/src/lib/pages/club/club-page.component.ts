@@ -45,7 +45,7 @@ import {
   ChildSpacesService,
   IChildSpaceBrief,
 } from '../../services/child-spaces.service';
-import { clubContactTitle } from '../contacts/club-contacts-page.component';
+import { memberContactTitle } from '@sneat/extension-contactus-ui';
 
 // The club's main page: a Teams card listing the club's teams (child spaces),
 // and a Menu card that mirrors the side menu — shown only below the lg
@@ -107,7 +107,7 @@ export class ClubPageComponent extends SpaceBaseComponent {
   private readonly contactusSpaceService = inject(CONTACTUS_SPACE_SERVICE);
 
   protected rosterTitle(contact: IIdAndBrief<IContactBrief>): string {
-    return clubContactTitle(contact);
+    return memberContactTitle(contact);
   }
   protected notJoined(contact: IIdAndBrief<IContactBrief>): boolean {
     return !contact.brief.userID;

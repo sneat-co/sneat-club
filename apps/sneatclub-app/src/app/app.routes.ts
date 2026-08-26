@@ -23,10 +23,13 @@ export const appRoutes: Route[] = [
   },
   {
     // The landing for invite links: /join/team?id=<inviteID>#pin=<pin>.
-    // Unguarded — the invite preview shows before sign-in (see JoinPageComponent).
+    // Unguarded — the invite preview shows before sign-in. The page is the
+    // SHARED one from contactus; it takes its branding from APP_INFO.
     path: 'join/:spaceType',
     loadComponent: () =>
-      import('./join/join-page.component').then((m) => m.JoinPageComponent),
+      import('@sneat/extension-contactus-ui').then(
+        (m) => m.JoinSpacePageComponent,
+      ),
   },
   {
     // Register your club — the unified space-registration wizard
