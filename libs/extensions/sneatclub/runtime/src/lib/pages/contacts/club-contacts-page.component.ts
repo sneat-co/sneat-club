@@ -121,8 +121,24 @@ export class ClubContactsPageComponent extends SpaceBaseComponent {
   }
 
   protected contactTitle(contact: IIdAndBrief<IContactBrief>): string {
-    return contact.brief.title || contact.id;
+    return clubContactTitle(contact);
   }
+}
+
+// Member contacts store structured names with an EMPTY title — falling back
+// to the id showed players as "pd" instead of "Pat Dbg" (found by the
+// production UI e2e).
+export function clubContactTitle(
+  contact: IIdAndBrief<IContactBrief>,
+): string {
+  const brief = contact.brief;
+  const names = brief.names;
+  return (
+    brief.title ||
+    [names?.firstName, names?.lastName].filter(Boolean).join(' ') ||
+    names?.fullName ||
+    contact.id
+  );
 }
 
 function matches(data: IClubContactsRouteData, brief: IContactBrief): boolean {
