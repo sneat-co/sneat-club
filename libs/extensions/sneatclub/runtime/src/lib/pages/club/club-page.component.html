@@ -35,6 +35,51 @@
         </ion-item>
       }
     </ion-card>
+
+    <!-- The team's roster: players with their joined state. -->
+    <ion-card class="last-child-no-border">
+      <ion-item
+        color="divider"
+        lines="full"
+        tappable
+        [routerLink]="spacePageUrl('players')"
+        routerDirection="root"
+        detail="true"
+      >
+        <ion-icon name="football-outline" slot="start" />
+        <ion-label color="medium">Players</ion-label>
+      </ion-item>
+      @if ($roster(); as roster) {
+        @for (player of roster; track player.id) {
+          <ion-item
+            tappable
+            [routerLink]="spacePageUrl('contact/' + player.id)"
+            routerDirection="forward"
+            detail="true"
+          >
+            <ion-label>{{ rosterTitle(player) }}</ion-label>
+            @if (notJoined(player)) {
+              <ion-badge slot="end" color="medium">not joined yet</ion-badge>
+            }
+          </ion-item>
+        } @empty {
+          <ion-item lines="none">
+            <ion-text color="medium">No players yet.</ion-text>
+            <ion-button
+              slot="end"
+              [routerLink]="spacePageUrl('invite/player')"
+              routerDirection="forward"
+            >
+              Invite player
+            </ion-button>
+          </ion-item>
+        }
+      } @else {
+        <ion-item lines="none">
+          <ion-skeleton-text [animated]="true" style="width: 60%" />
+        </ion-item>
+      }
+    </ion-card>
   } @else if (!$dboLoaded()) {
     <!-- Route says club, but pre-migration teams carry club-typed briefs —
          wait for the space document before drawing the Teams card. -->

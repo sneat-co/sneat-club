@@ -21,6 +21,14 @@
       <ion-item color="divider" lines="full">
         <ion-label color="medium">Invite link is ready</ion-label>
       </ion-item>
+      @if ($emailedTo(); as emailedTo) {
+        <ion-item lines="full">
+          <ion-text color="success"
+            >The invite has been emailed to {{ emailedTo }}. You can also share
+            the link directly:</ion-text
+          >
+        </ion-item>
+      }
       <ion-item lines="full">
         <ion-label class="ion-text-wrap">
           <ion-text color="medium">
@@ -69,6 +77,15 @@
           label="Last name (optional)"
           labelPlacement="floating"
           [(ngModel)]="lastName"
+          [disabled]="$busy()"
+        />
+      </ion-item>
+      <ion-item>
+        <ion-input
+          label="Email (optional — we'll email the invite)"
+          labelPlacement="floating"
+          type="email"
+          [(ngModel)]="email"
           [disabled]="$busy()"
         />
       </ion-item>
