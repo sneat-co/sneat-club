@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-} from '@angular/fire/auth';
+} from 'firebase/auth';
 import {
   IonButton,
   IonCard,
