@@ -40,6 +40,8 @@ const ROUTES = [
   '/space/team/probe-team-id/players',
   '/space/team/probe-team-id/invite/player',
   '/space/team/probe-team-id/invite/parent',
+  '/space/team/probe-team-id/invite/staff',
+  '/space/team/probe-team-id/contact/probe-contact-id',
   '/join/team',
   '/my',
 ];

@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {
   IonBackButton,
+  IonBadge,
   IonButton,
   IonButtons,
   IonCard,
@@ -45,7 +46,7 @@ export interface IClubContactsRouteData {
   readonly roles?: readonly string[];
   readonly contactType?: string;
   // When set, the page header offers "Invite" → the invite/:role page.
-  readonly inviteRole?: 'player' | 'parent';
+  readonly inviteRole?: 'player' | 'parent' | 'staff';
 }
 
 @Component({
@@ -55,6 +56,7 @@ export interface IClubContactsRouteData {
     SpaceServiceModule,
     RouterLink,
     IonBackButton,
+    IonBadge,
     IonButton,
     IonButtons,
     IonCard,
@@ -122,6 +124,13 @@ export class ClubContactsPageComponent extends SpaceBaseComponent {
 
   protected contactTitle(contact: IIdAndBrief<IContactBrief>): string {
     return clubContactTitle(contact);
+  }
+
+  // A person contact without a linked userID has not claimed their invite yet.
+  protected notJoined(contact: IIdAndBrief<IContactBrief>): boolean {
+    return (
+      (contact.brief.type as string) === 'person' && !contact.brief.userID
+    );
   }
 }
 

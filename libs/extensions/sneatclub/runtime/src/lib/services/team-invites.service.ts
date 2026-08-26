@@ -28,10 +28,11 @@ export class TeamInvitesService {
 
   public invitePersonToTeam(
     spaceID: string,
-    role: 'player' | 'parent',
+    role: ClubInviteRole,
     firstName: string,
     lastName: string,
     message: string,
+    email?: string,
   ): Observable<ITeamInviteLink> {
     return this.api
       .post<ICreatedMember>('contactus/create_member', {
@@ -45,21 +46,49 @@ export class TeamInvitesService {
         ageGroup: 'unknown',
       })
       .pipe(
-        switchMap((member) =>
-          this.inviteService
-            .getInviteLinkForMember({
-              spaceID,
-              to: { channel: 'link', memberID: member.id },
-              message,
-            })
-            .pipe(
-              map((response: ICreatePersonalInviteResponse) => ({
-                memberID: member.id,
-                inviteID: response.invite.id,
-                pin: response.invite.pin || '',
-              })),
-            ),
-        ),
+        switchMap((member) => this.linkForMember(spaceID, member.id, message, email)),
       );
   }
+
+  // Get-or-REUSE: calling again for the same member returns the SAME invite,
+  // so "copy link" for a pending member is safe to call repeatedly.
+  public linkForMember(
+    spaceID: string,
+    memberID: string,
+    message = '',
+    email?: string,
+  ): Observable<ITeamInviteLink> {
+    const toShape = (response: ICreatePersonalInviteResponse) => ({
+      memberID,
+      inviteID: response.invite.id,
+      pin: response.invite.pin || '',
+    });
+    if (email) {
+      // Email channel: the backend also QUEUES delivery (send: true — the
+      // published request type predates the flag, hence the cast).
+      const request = {
+        spaceID,
+        to: { channel: 'email', address: email, memberID },
+        message,
+        send: true,
+      } as unknown as Parameters<typeof this.inviteService.createInviteForMember>[0];
+      return this.inviteService.createInviteForMember(request).pipe(map(toShape));
+    }
+    return this.inviteService
+      .getInviteLinkForMember({
+        spaceID,
+        to: { channel: 'link', memberID },
+        message,
+      })
+      .pipe(map(toShape));
+  }
+
+  public removeMember(spaceID: string, contactID: string): Observable<unknown> {
+    return this.api.post<unknown>('contactus/remove_space_member', {
+      spaceID,
+      contactID,
+    });
+  }
 }
+
+export type ClubInviteRole = 'player' | 'parent' | 'staff';

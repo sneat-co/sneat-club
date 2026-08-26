@@ -31,8 +31,16 @@
       </ion-item>
     } @else if ($contacts(); as contacts) {
       @for (contact of contacts; track contact.id) {
-        <ion-item>
+        <ion-item
+          tappable
+          [routerLink]="spacePageUrl('contact/' + contact.id)"
+          routerDirection="forward"
+          detail="true"
+        >
           <ion-label>{{ contactTitle(contact) }}</ion-label>
+          @if (notJoined(contact)) {
+            <ion-badge slot="end" color="medium">not joined yet</ion-badge>
+          }
         </ion-item>
       } @empty {
         <ion-item lines="none">

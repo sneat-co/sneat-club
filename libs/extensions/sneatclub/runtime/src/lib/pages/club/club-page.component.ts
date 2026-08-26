@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
+  IonBadge,
+  IonButton,
   IonButtons,
   IonCard,
   IonContent,
@@ -26,13 +28,24 @@ import {
 } from '@sneat/space-components';
 import { SpaceServiceModule } from '@sneat/space-services';
 import { ClassName } from '@sneat/ui';
-import { of } from 'rxjs';
-import { catchError, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  map,
+  switchMap,
+} from 'rxjs/operators';
 import { clubMenuItemsFor } from '../../club-menu-items';
+import { IIdAndBrief } from '@sneat/core';
+import {
+  CONTACTUS_SPACE_SERVICE,
+  IContactBrief,
+} from '@sneat/extension-contactus-contract';
 import {
   ChildSpacesService,
   IChildSpaceBrief,
 } from '../../services/child-spaces.service';
+import { clubContactTitle } from '../contacts/club-contacts-page.component';
 
 // The club's main page: a Teams card listing the club's teams (child spaces),
 // and a Menu card that mirrors the side menu — shown only below the lg
@@ -44,6 +57,8 @@ import {
   imports: [
     SpaceServiceModule,
     RouterLink,
+    IonBadge,
+    IonButton,
     IonButtons,
     IonCard,
     IonContent,
@@ -89,6 +104,19 @@ export class ClubPageComponent extends SpaceBaseComponent {
   });
 
   private readonly childSpacesService = inject(ChildSpacesService);
+  private readonly contactusSpaceService = inject(CONTACTUS_SPACE_SERVICE);
+
+  protected rosterTitle(contact: IIdAndBrief<IContactBrief>): string {
+    return clubContactTitle(contact);
+  }
+  protected notJoined(contact: IIdAndBrief<IContactBrief>): boolean {
+    return !contact.brief.userID;
+  }
+
+  // Team overview roster: the team's players with their joined state.
+  protected readonly $roster = signal<
+    IIdAndBrief<IContactBrief>[] | undefined
+  >(undefined);
 
   constructor() {
     super();
@@ -114,6 +142,30 @@ export class ClubPageComponent extends SpaceBaseComponent {
         }),
       )
       .subscribe((teams) => this.$teams.set(teams));
+
+    combineLatest([
+      this.spaceIDChanged$.pipe(distinctUntilChanged()),
+      this.spaceTypeChanged$.pipe(distinctUntilChanged()),
+    ])
+      .pipe(
+        this.takeUntilDestroyed(),
+        switchMap(([spaceID, spaceType]) => {
+          this.$roster.set(undefined);
+          if (!spaceID || (spaceType as string) !== 'team') {
+            return of(undefined);
+          }
+          return this.contactusSpaceService.watchContactBriefs(spaceID).pipe(
+            map((contacts) =>
+              contacts.filter((c) => (c.brief.roles || []).includes('player')),
+            ),
+            catchError((err) => {
+              this.errorLogger.logError(err, 'Failed to load team roster');
+              return of(undefined);
+            }),
+          );
+        }),
+      )
+      .subscribe((roster) => this.$roster.set(roster));
 
     this.userService.userState.pipe(this.takeUntilDestroyed()).subscribe({
       next: (userState) => {

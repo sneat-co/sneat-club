@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button [text]="null" [defaultHref]="$defaultBackUrl()" />
+    </ion-buttons>
+    <ion-title
+      >👤 {{ $title() }}
+      @if ($space().brief?.title) {
+        &#64; {{ $space().brief?.title }}
+      }
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="mainMenu" />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="last-child-no-border">
+    @if ($error(); as error) {
+      <ion-item lines="none">
+        <ion-text color="danger">{{ error }}</ion-text>
+      </ion-item>
+    } @else if ($contact() === undefined) {
+      <ion-item lines="none">
+        <ion-skeleton-text [animated]="true" style="width: 60%" />
+      </ion-item>
+    } @else if ($contact() === null) {
+      <ion-item lines="none">
+        <ion-text color="medium">This member is no longer listed here.</ion-text>
+      </ion-item>
+    } @else if ($contact(); as contact) {
+      <ion-item lines="full">
+        <ion-label>
+          <h2>{{ $title() }}</h2>
+          <p>
+            @for (role of contact.brief.roles || []; track role) {
+              <ion-badge color="light" style="margin-right: 0.25rem">{{
+                role
+              }}</ion-badge>
+            }
+          </p>
+        </ion-label>
+        @if ($notJoined()) {
+          <ion-badge slot="end" color="medium">not joined yet</ion-badge>
+        } @else if (contact.brief.userID) {
+          <ion-badge slot="end" color="success">joined</ion-badge>
+        }
+      </ion-item>
+      @if ($notJoined()) {
+        <ion-item lines="full">
+          <ion-button (click)="copyInviteLink()" [disabled]="$busy()" size="default">
+            <ion-icon name="copy-outline" slot="start" />
+            {{ $copied() ? 'Invite link copied!' : 'Copy invite link' }}
+          </ion-button>
+        </ion-item>
+      }
+      <ion-item lines="none">
+        <ion-button
+          color="danger"
+          fill="outline"
+          size="default"
+          [disabled]="$busy()"
+          (click)="confirmRemove()"
+        >
+          <ion-icon name="trash-outline" slot="start" />
+          Remove from this space
+        </ion-button>
+      </ion-item>
+    }
+  </ion-card>
+</ion-content>

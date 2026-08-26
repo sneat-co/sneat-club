@@ -36,11 +36,10 @@ import {
   childSpacesErrorMessage,
 } from '../../services/child-spaces.service';
 import {
+  ClubInviteRole,
   ITeamInviteLink,
   TeamInvitesService,
 } from '../../services/team-invites.service';
-
-type InviteRole = 'player' | 'parent';
 
 // Invites a player or a parent to the team: creates the member contact with
 // the role (contactus) and mints a personal invite link (invitus). The link
@@ -81,20 +80,21 @@ export class InviteMemberPageComponent extends SpaceBaseComponent {
   private readonly $routeRole = toSignal(
     this.route.paramMap.pipe(map((p) => p.get('role'))),
   );
-  protected readonly $role = computed<InviteRole>(() =>
-    this.$routeRole() === 'parent' ? 'parent' : 'player',
-  );
-  protected readonly $roleTitle = computed(() =>
-    this.$role() === 'parent' ? 'parent' : 'player',
-  );
+  protected readonly $role = computed<ClubInviteRole>(() => {
+    const role = this.$routeRole();
+    return role === 'parent' || role === 'staff' ? role : 'player';
+  });
+  protected readonly $roleTitle = computed(() => this.$role());
 
   protected firstName = '';
   protected lastName = '';
+  protected email = '';
   protected message = '';
   protected readonly $busy = signal(false);
   protected readonly $error = signal<string | undefined>(undefined);
   protected readonly $link = signal<string | undefined>(undefined);
   protected readonly $copied = signal(false);
+  protected readonly $emailedTo = signal<string | undefined>(undefined);
 
   protected create(): void {
     const spaceID = this.$spaceID();
@@ -111,11 +111,13 @@ export class InviteMemberPageComponent extends SpaceBaseComponent {
         firstName,
         this.lastName.trim(),
         this.message.trim(),
+        this.email.trim() || undefined,
       )
       .pipe(this.takeUntilDestroyed())
       .subscribe({
         next: (invite) => {
           this.$busy.set(false);
+          this.$emailedTo.set(this.email.trim() || undefined);
           this.$link.set(this.composeJoinLink(invite));
         },
         error: (err) => {
@@ -166,8 +168,10 @@ export class InviteMemberPageComponent extends SpaceBaseComponent {
   protected inviteAnother(): void {
     this.firstName = '';
     this.lastName = '';
+    this.email = '';
     this.message = '';
     this.$link.set(undefined);
     this.$copied.set(false);
+    this.$emailedTo.set(undefined);
   }
 }

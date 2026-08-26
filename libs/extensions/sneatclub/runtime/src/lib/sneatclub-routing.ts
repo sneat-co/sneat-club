@@ -41,6 +41,7 @@ export const sneatclubRoutes: Route[] = [
       title: 'Staff',
       emoji: '🧑‍🏫',
       roles: ['staff', 'coach', 'admin', 'manager', 'director', 'owner', 'creator'],
+      inviteRole: 'staff',
     }),
     loadComponent: contactsPage,
   },
@@ -72,6 +73,14 @@ export const sneatclubRoutes: Route[] = [
       contactType: 'location',
     }),
     loadComponent: contactsPage,
+  },
+  {
+    path: 'contact/:contactID',
+    data: { title: 'Member' },
+    loadComponent: () =>
+      import('./pages/contact/contact-details-page.component').then(
+        (m) => m.ContactDetailsPageComponent,
+      ),
   },
   {
     path: 'gear',
