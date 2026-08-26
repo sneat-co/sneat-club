@@ -34,7 +34,7 @@ bootstrapApplication(App, {
     // `as SneatApp`: the template's placeholder appId isn't in @sneat/core's
     // SneatApp union yet. Remove the cast once @sneat/core allows any string
     // (or once the renamed app's id is registered).
-    provideAppInfo({ appId: 'sneatclub' as SneatApp, appTitle: 'Sneatclub.app' }),
+    provideAppInfo({ appId: 'sneatclub' as SneatApp, appTitle: 'Sneat Club' }),
     provideRouter([...appRoutes, ...authRoutes]),
     provideRolesByType(undefined),
   ],
