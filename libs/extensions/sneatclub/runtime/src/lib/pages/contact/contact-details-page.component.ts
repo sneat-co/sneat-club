@@ -38,9 +38,12 @@ import { SpaceServiceModule } from '@sneat/space-services';
 import { ClassName } from '@sneat/ui';
 import { combineLatest, of } from 'rxjs';
 import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { clubContactTitle } from '../contacts/club-contacts-page.component';
-import { childSpacesErrorMessage } from '../../services/child-spaces.service';
-import { TeamInvitesService } from '../../services/team-invites.service';
+import {
+  MemberInvitesService,
+  isPendingMember,
+  memberContactTitle,
+  memberInviteErrorMessage,
+} from '@sneat/extension-contactus-ui';
 
 // One member of the club/team: name, roles, joined state — with the two
 // organiser actions that matter: copy their invite link (get-or-REUSE, so it
@@ -74,7 +77,7 @@ import { TeamInvitesService } from '../../services/team-invites.service';
 })
 export class ContactDetailsPageComponent extends SpaceBaseComponent {
   private readonly contactusSpaceService = inject(CONTACTUS_SPACE_SERVICE);
-  private readonly teamInvites = inject(TeamInvitesService);
+  private readonly memberInvites = inject(MemberInvitesService);
   private readonly location = inject(Location);
   private readonly alertCtrl = inject(AlertController);
 
@@ -91,15 +94,11 @@ export class ContactDetailsPageComponent extends SpaceBaseComponent {
 
   protected readonly $title = computed(() => {
     const contact = this.$contact();
-    return contact ? clubContactTitle(contact) : 'Member';
+    return contact ? memberContactTitle(contact) : 'Member';
   });
   protected readonly $notJoined = computed(() => {
     const contact = this.$contact();
-    return (
-      !!contact &&
-      (contact.brief.type as string) === 'person' &&
-      !contact.brief.userID
-    );
+    return !!contact && isPendingMember(contact);
   });
 
   constructor() {
@@ -139,7 +138,7 @@ export class ContactDetailsPageComponent extends SpaceBaseComponent {
       return;
     }
     this.$busy.set(true);
-    this.teamInvites
+    this.memberInvites
       .linkForMember(spaceID, contactID)
       .pipe(this.takeUntilDestroyed())
       .subscribe({
@@ -159,7 +158,7 @@ export class ContactDetailsPageComponent extends SpaceBaseComponent {
         error: (err) => {
           this.$busy.set(false);
           this.$error.set(
-            childSpacesErrorMessage(err, 'We could not get the invite link.'),
+            memberInviteErrorMessage(err, 'We could not get the invite link.'),
           );
         },
       });
@@ -184,7 +183,7 @@ export class ContactDetailsPageComponent extends SpaceBaseComponent {
       return;
     }
     this.$busy.set(true);
-    this.teamInvites
+    this.memberInvites
       .removeMember(spaceID, contactID)
       .pipe(this.takeUntilDestroyed())
       .subscribe({
@@ -196,7 +195,7 @@ export class ContactDetailsPageComponent extends SpaceBaseComponent {
         error: (err) => {
           this.$busy.set(false);
           this.$error.set(
-            childSpacesErrorMessage(err, 'We could not remove the member.'),
+            memberInviteErrorMessage(err, 'We could not remove the member.'),
           );
           this.errorLogger.logError(err, 'Failed to remove a member');
         },

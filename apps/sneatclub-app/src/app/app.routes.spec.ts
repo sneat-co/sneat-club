@@ -20,6 +20,16 @@ describe('appRoutes', () => {
     expect(root?.canActivate?.[0]).toBe(sneatAuthGuard);
   });
 
+  it('mounts the invite landing at join/:spaceType, UNGUARDED', () => {
+    // This route once vanished in a bad edit and only the prod smoke caught
+    // it: every invite link 404s (NG04002) without it, and a guard here would
+    // put a login wall in front of an invitee who has no account yet.
+    const join = appRoutes.find((r) => r.path === 'join/:spaceType');
+    expect(join).toBeDefined();
+    expect(typeof join?.loadComponent).toBe('function');
+    expect(join?.canActivate).toBeUndefined();
+  });
+
   it('mounts the space-scoped routes lazily', () => {
     const space = appRoutes.find(
       (r) => r.path === 'space/:spaceType/:spaceID',

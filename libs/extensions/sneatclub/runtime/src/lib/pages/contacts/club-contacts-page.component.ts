@@ -25,6 +25,10 @@ import {
   CONTACTUS_SPACE_SERVICE,
   IContactBrief,
 } from '@sneat/extension-contactus-contract';
+import {
+  isPendingMember,
+  memberContactTitle,
+} from '@sneat/extension-contactus-ui';
 import { RouterLink } from '@angular/router';
 import {
   SpaceBaseComponent,
@@ -123,31 +127,13 @@ export class ClubContactsPageComponent extends SpaceBaseComponent {
   }
 
   protected contactTitle(contact: IIdAndBrief<IContactBrief>): string {
-    return clubContactTitle(contact);
+    return memberContactTitle(contact);
   }
 
   // A person contact without a linked userID has not claimed their invite yet.
   protected notJoined(contact: IIdAndBrief<IContactBrief>): boolean {
-    return (
-      (contact.brief.type as string) === 'person' && !contact.brief.userID
-    );
+    return isPendingMember(contact);
   }
-}
-
-// Member contacts store structured names with an EMPTY title — falling back
-// to the id showed players as "pd" instead of "Pat Dbg" (found by the
-// production UI e2e).
-export function clubContactTitle(
-  contact: IIdAndBrief<IContactBrief>,
-): string {
-  const brief = contact.brief;
-  const names = brief.names;
-  return (
-    brief.title ||
-    [names?.firstName, names?.lastName].filter(Boolean).join(' ') ||
-    names?.fullName ||
-    contact.id
-  );
 }
 
 function matches(data: IClubContactsRouteData, brief: IContactBrief): boolean {
