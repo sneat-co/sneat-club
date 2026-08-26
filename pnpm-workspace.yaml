@@ -1,6 +1,6 @@
 overrides:
-  '@sneat/extension-contactus': 0.14.1
-  '@sneat/extension-contactus-ui': 0.14.1
+  '@sneat/extension-contactus': 0.14.2
+  '@sneat/extension-contactus-ui': 0.14.2
   '@sneat/extension-assetus': 0.0.5
   '@sneat/api-firebase-auth': 0.27.0
   '@sneat/api-public': 0.27.0
