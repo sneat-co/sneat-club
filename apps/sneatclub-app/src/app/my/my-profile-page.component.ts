@@ -31,7 +31,7 @@ import { UserCountryComponent } from '@sneat/components';
         <ion-buttons slot="start">
           <ion-back-button defaultHref="/" />
         </ion-buttons>
-        <ion-title>My profile @ Sneatclub.app</ion-title>
+        <ion-title>My profile @ Sneat Club</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
