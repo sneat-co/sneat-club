@@ -16,6 +16,17 @@ export default [
           style: 'camelCase',
         },
       ],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '^@ionic/angular$',
+              message: 'Import Ionic components from focused @ionic/angular/ion-* subpaths.',
+            },
+          ],
+        },
+      ],
       '@angular-eslint/component-selector': [
         'error',
         {

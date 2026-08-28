@@ -1,22 +1,20 @@
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import {
-  IonButton,
-  IonButtons,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonList,
-  IonMenuButton,
-  IonNote,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/angular';
+import { IonButton } from '@ionic/angular/ion-button';
+import { IonButtons } from '@ionic/angular/ion-buttons';
+import { IonCard } from '@ionic/angular/ion-card';
+import { IonCardContent } from '@ionic/angular/ion-card-content';
+import { IonCardHeader } from '@ionic/angular/ion-card-header';
+import { IonCardTitle } from '@ionic/angular/ion-card-title';
+import { IonContent } from '@ionic/angular/ion-content';
+import { IonHeader } from '@ionic/angular/ion-header';
+import { IonIcon } from '@ionic/angular/ion-icon';
+import { IonList } from '@ionic/angular/ion-list';
+import { IonMenuButton } from '@ionic/angular/ion-menu-button';
+import { IonNote } from '@ionic/angular/ion-note';
+import { IonTitle } from '@ionic/angular/ion-title';
+import { IonToolbar } from '@ionic/angular/ion-toolbar';
 import { SneatUserService } from '@sneat/auth-core';
 import { UserRequiredFieldsService } from '@sneat/auth-ui';
 import { ISpaceContext } from '@sneat/space-models';
