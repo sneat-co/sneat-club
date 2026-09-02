@@ -71,3 +71,20 @@ graph.
 Draft / early access. The landing and app preview are the first shipped
 surfaces; the full app (registration, memberships, communication, attendance,
 and the plugged-in engines) follows the roadmap in `backstage`.
+
+## Funnel channels
+
+Runtime user-flow hand-offs this product takes part in — how it feeds, and is
+fed by, the rest of the Sneat ecosystem. Canonical map (all products, chains
+and statuses): [backstage `docs/architecture/funnel-map.md`](https://github.com/sneat-co/backstage/blob/main/docs/architecture/funnel-map.md); [the record format](https://github.com/sneat-co/backstage/blob/main/docs/standards/funnel-channels-format.md).
+
+These are **not** spec dependencies — see this product's backstage Idea doc
+(`Related Ideas`) for those. Rows are verbatim excerpts of the canonical map;
+edit them there, not here.
+
+### Outbound
+
+| ID | Source | Target | Channel | Trigger | Payload | Acquisition role | Status | Evidence |
+|---|---|---|---|---|---|---|---|---|
+| FC-sneat-club-eventius-01 | sneat-club | eventius | training-and-match-attendance | Club schedules a training session or match | Occasion + roster to confirm | internal | planned | [`sneat-club` idea](https://github.com/sneat-co/backstage/blob/main/spec/ideas/sneat-club.md) — delegates RSVP/attendance to rsvp.express |
+| FC-sneat-club-calendarius-01 | sneat-club | calendarius | fixture-to-family-calendar | Coach rosters a player to a fixture | Cross-space calendar projection | acquires:sneat-app — guardian | planned | ADR 0021 §4 names clubs as a consumer; capability not built |
