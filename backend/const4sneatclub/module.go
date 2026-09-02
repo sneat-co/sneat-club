@@ -31,9 +31,22 @@ const SlugNamespace = "sneatclub:space"
 // club subtree. A guardian's relationship is not to the club; it is to their
 // child, who belongs to the club. See backstage /WINDOW-MODEL.md (ADR 0022).
 //
-// The two are orthogonal: a parent who also coaches is a member in their own
-// right FOR THE COACHING ROLE, and separately holds a guardian Window over
-// their child. Ending one does not end the other.
+// A DUAL-ROLE PERSON IS NOT CONSTRAINED BY THEIR WINDOW, and it would be wrong
+// to imply otherwise. A parent who also coaches IS a member, so their uid is in
+// space.userIDs and gate G1 gives them direct client read of the whole club
+// subtree — every other child included. Their guardian Window adds nothing for
+// them and constrains nothing: the member half swallows it. This is the same
+// case WINDOW-MODEL section 5 explicitly concedes it cannot handle for a
+// teacher who is also a parent, and a window does not narrow a member anywhere.
+//
+// The club accepts that consequence today: someone trusted enough to coach is
+// trusted with the roster. What must not happen is anyone reading the guardian
+// role as a limit on a person who is also staff or a participant.
+//
+// RATIFIABLE, not settled: the founder ruled on where guardians sit, not on
+// dual-role people. If clubs later need a coach's view narrowed to their own
+// squad, that needs the same missing mechanism the platform doc prices for
+// teacher scoping — not a Window.
 //
 // A club that starts collecting subscriptions does not become a company. It
 // gains a payments capability alongside this extension's marker in
