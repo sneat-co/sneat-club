@@ -20,9 +20,20 @@ const SlugNamespace = "sneatclub:space"
 //
 // A club registers as a `club` Space, NOT a `company` — and it is the case that
 // shows the space-type rule discriminating rather than collapsing. A club's
-// players, guardians, coaches and volunteers are *members*: membership is the
-// relationship. A venue, a school and a community centre are `company` Spaces
-// because their staff are members and their public are customers.
+// *participants* — players, coaches and volunteers — are *members*: membership
+// is the relationship. A venue, a school and a community centre are `company`
+// Spaces because their staff are members and their public are customers.
+//
+// GUARDIANS ARE NOT MEMBERS (founder ruling, 2026-09-02). A guardian is a
+// club-side linked contact carrying the `guardian` role and holding a Window
+// over their child — never a Space member, because `member` puts their uid in
+// space.userIDs and the deployed Firestore rules then grant read of the WHOLE
+// club subtree. A guardian's relationship is not to the club; it is to their
+// child, who belongs to the club. See backstage /WINDOW-MODEL.md (ADR 0022).
+//
+// The two are orthogonal: a parent who also coaches is a member in their own
+// right FOR THE COACHING ROLE, and separately holds a guardian Window over
+// their child. Ending one does not end the other.
 //
 // A club that starts collecting subscriptions does not become a company. It
 // gains a payments capability alongside this extension's marker in

@@ -16,11 +16,16 @@ func TestExtensionID(t *testing.T) {
 // TestSpaceRegistrationProfile_ClubNotCompany guards the distinction that makes
 // the space-type rule worth having.
 //
-// A club's players, guardians, coaches and volunteers are members — membership
-// IS the relationship — so a club is `club`. A venue, a school and a community
-// centre are `company`, because their staff are members and their public are
-// customers. If this ever silently becomes `company`, the rule has collapsed
-// into "everything is a company" and the type stops carrying information.
+// A club's participants — players, coaches and volunteers — are members;
+// membership IS the relationship for them, so a club is `club`. A venue, a
+// school and a community centre are `company`, because their staff are members
+// and their public are customers. If this ever silently becomes `company`, the
+// rule has collapsed into "everything is a company" and the type stops carrying
+// information.
+//
+// Guardians are deliberately NOT in that list: per the founder ruling of
+// 2026-09-02 they are linked contacts holding a Window, not members. That
+// narrows the rationale without weakening it — see module.go.
 func TestSpaceRegistrationProfile_ClubNotCompany(t *testing.T) {
 	if got := SpaceRegistrationProfile.SpaceType; got != coretypes.SpaceTypeClub {
 		t.Errorf("SpaceType = %q, want %q", got, coretypes.SpaceTypeClub)

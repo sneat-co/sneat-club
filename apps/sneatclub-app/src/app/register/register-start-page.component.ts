@@ -74,7 +74,7 @@ import {
           <ion-card-header>
             <ion-card-title>Your club</ion-card-title>
             <ion-card-subtitle>
-              Players, guardians, coaches and volunteers join your club as members — in a club, membership is the relationship.
+              Players, coaches and volunteers join your club as members — in a club, membership is the relationship. Guardians get a linked view of their own child, without joining.
             </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
