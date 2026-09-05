@@ -3,27 +3,27 @@ overrides:
   # which fractures HttpParams and friends against this app's 22.1.3. Also collapses
   # the second @angular/core variant that @angular/fire@20 ->
   # @angular/platform-browser-dynamic@20 -> @angular/compiler@20 used to drag in.
-  '@angular/animations': 22.1.3
-  '@angular/common': 22.1.3
-  '@angular/compiler': 22.1.3
-  '@angular/core': 22.1.3
-  '@angular/forms': 22.1.3
-  '@angular/platform-browser': 22.1.3
-  '@angular/router': 22.1.3
+  '@angular/animations': 22.1.5
+  '@angular/common': 22.1.5
+  '@angular/compiler': 22.1.5
+  '@angular/core': 22.1.5
+  '@angular/forms': 22.1.5
+  '@angular/platform-browser': 22.1.5
+  '@angular/router': 22.1.5
   # @angular/fire is gone from this repo entirely (sneat-libs 0.27.0 dropped it
   # fleet-wide; the platform-browser-dynamic peer it used to drag in went with
   # it). This app bootstraps zoneless via bootstrapApplication and never
   # imports platform-browser-dynamic anywhere, so it's a dead, unused package
   # in the tree — pin it to the app's Angular minor rather than carry a stray
   # sub-22 Angular package if anything else ever pulls it back in.
-  '@angular/platform-browser-dynamic': 22.1.3
+  '@angular/platform-browser-dynamic': 22.1.5
   # Ionic fractures the same way, and less obviously: with two Ionic versions in
   # the tree pnpm instantiates @sneat/space-services TWICE at the SAME 0.26.4
   # version — same version, different peer resolution — and ModuleSpaceItemService
   # from one instance is not assignable to the other. Deduping the version alone
   # is not enough; the peers have to agree too.
-  '@ionic/angular': 9.0.0
-  '@ionic/core': 9.0.0
+  '@ionic/angular': 9.0.2
+  '@ionic/core': 9.0.2
   # Same fracture again, one layer deeper: @angular/fire@20 bundles
   # @schematics/angular@^20.0.0 / @angular-devkit/schematics@^20.0.0, which in
   # turn drags in @angular-devkit/core@20.3.32. That older devkit/schematics
@@ -36,9 +36,9 @@ overrides:
   # to this repo's @angular/build minor removes the v20 instances entirely, so
   # the chokidar-peer override that used to paper over the fork is no longer
   # needed.
-  '@angular-devkit/core': 22.1.5
-  '@angular-devkit/schematics': 22.1.5
-  '@schematics/angular': 22.1.5
+  '@angular-devkit/core': 22.1.7
+  '@angular-devkit/schematics': 22.1.7
+  '@schematics/angular': 22.1.7
   # Dependabot CVE fixes forced onto transitive deps (firebase@12 / dev tooling).
   # `>=` floors so pnpm resolves the highest compatible patched version rather
   # than pinning. Prune an entry once the direct dep that pulls the vulnerable
