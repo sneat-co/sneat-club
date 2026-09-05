@@ -16,6 +16,8 @@ github.com/sneat-co/sneat-go-core v0.66.0 h1:K5jAhg10mZLJrIegBYLHQLix1BArpPAj1fI
 github.com/sneat-co/sneat-go-core v0.66.0/go.mod h1:FMF4JqcTTETssvYlHfTYo5lfQZTNGdDm0yaAqoeGrmE=
 github.com/sneat-co/sneat-go-core v0.67.5 h1:UnUJXyModuW6vO2vI5z9wn7b4tMMLA/hBV2TG2sOzPo=
 github.com/sneat-co/sneat-go-core v0.67.5/go.mod h1:3iU1/czJsF7hoeocCA/bjoFe7oPQUvAcF8WgrEV5rFY=
+github.com/sneat-co/sneat-go-core v0.67.6 h1:ijwcN91t3dc4yI7G5zfgDTK/pE4QmBOiyDBS8/skqMw=
+github.com/sneat-co/sneat-go-core v0.67.6/go.mod h1:CjzXOvkDjmQ8JhORlvNSxqGxnp7yXJot1n9T8dcgpE0=
 github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
 github.com/strongo/analytics v0.2.5 h1:wNobPTa5C9hQUembtVYEXHIGGBWO29H0iUhTicR9CEo=
@@ -36,6 +38,8 @@ github.com/strongo/validation v0.0.10 h1:DDydmPl6O8YmRmSEtz7VimX6k0Q3Vs1CsUEWqtZ
 github.com/strongo/validation v0.0.10/go.mod h1:YUwoPEItLJd/Bc9X1OCUm03ofhvm3kwZvuihU7/jz58=
 github.com/strongo/validation v0.0.12 h1:HdJjY+RyjkdCKUILRo+Esbv0oGonGkDbaBiDD2TuBLs=
 github.com/strongo/validation v0.0.12/go.mod h1:lAa/j9pnW2Bi5CRAr+6FYX3hocN6YjekWILa8wLOT/Y=
+github.com/strongo/validation v0.0.13 h1:EgRfP5XBZSVoiOd4805OGCOVqZndeqFONpSmdSerEE8=
+github.com/strongo/validation v0.0.13/go.mod h1:EY+//fgQhn6rr0rOvWRJuUCTSk5BIETZL2bL9CIDhbs=
 go.uber.org/mock v0.6.0 h1:hyF9dfmbgIX5EfOdasqLsWD6xqpNZlXblLB/Dbnwv3Y=
 go.uber.org/mock v0.6.0/go.mod h1:KiVJ4BqZJaMj4svdfmHM0AUx4NJYO8ZNpPnZn1Z+BBU=
 go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
