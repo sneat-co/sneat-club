@@ -66,6 +66,10 @@ local-only preview (localStorage, no account, no server) that demonstrates the
 core domain model; the real app signs users in and runs on the shared Sneat
 graph.
 
+Analytics: set `PUBLIC_GA4_MEASUREMENT_ID` (see `landings/.env.example`) at
+build time, or commit the id as the default in `landings/src/config/site.ts`.
+Until one is set nothing renders — no GA4 tag loads and nothing is recorded.
+
 ## Status
 
 Draft / early access. The landing and app preview are the first shipped
