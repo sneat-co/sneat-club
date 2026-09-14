@@ -10,4 +10,4 @@
  * Supply the id either as a build-time environment variable (CI / Cloudflare)
  * or by committing it here as the default.
  */
-export const gaMeasurementId: string = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID ?? "";
+export const gaMeasurementId: string = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID ?? "G-MCQZZ3JHZK";
