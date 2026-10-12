@@ -14,3 +14,6 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - workerd
+
+overrides:
+  js-yaml: ">=4.3.2"
