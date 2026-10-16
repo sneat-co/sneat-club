@@ -32,8 +32,8 @@ vertical lands on `sneat.co/sport/`.
 ## Live site & deployment
 
 **sneat.club is live** — an Astro marketing landing plus a draft, in-browser
-**app preview** at `/app`, served by one Cloudflare Worker (`sneat-club`) with
-`sneat.club` attached as a Custom Domain.
+**app preview** at `/app`, served as static assets by one assets-only Cloudflare Worker
+(`sneat-club`, no Worker script) with `sneat.club` attached as a Custom Domain.
 
 ```sh
 cd landings
@@ -45,7 +45,7 @@ pnpm preview   # preview the static build
 
 ### Deploy
 
-`landings/wrangler.jsonc` declares the worker (`sneat-club`) and attaches
+`landings/wrangler.jsonc` declares the assets-only worker (`sneat-club`) and attaches
 `sneat.club` as a Cloudflare **Custom Domain**. From `landings/`:
 
 ```sh
@@ -54,7 +54,10 @@ CLOUDFLARE_API_TOKEN=… CLOUDFLARE_ACCOUNT_ID=… pnpm exec wrangler deploy
 
 Attaching the custom domain needs a token with `Zone:DNS:Edit` on the
 `sneat.club` zone. `www` → apex is handled by a zone-level Redirect Rule (the
-worker owns the apex only).
+worker owns the apex only). Routing lives in `landings/public/_redirects` (`/` rewrites
+to the landing, `/register` -> `/app/register`) plus the SPA fallback `dist/index.html`
+(the app shell), assembled by `landings/scripts/assemble-app.mjs`. `/__/*` (Firebase Auth)
+is served by a zone route to `sneat-firebase-auth-proxy`, never by this site.
 
 ## `landings/` — the site (sneat.club)
 

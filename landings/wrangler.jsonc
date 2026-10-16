@@ -3,18 +3,26 @@
   "name": "sneat-club",
   "compatibility_date": "2026-06-23",
   "workers_dev": true,
-  "main": "worker.js",
-  // www -> apex is handled by a zone-level Cloudflare **Redirect Rule**
-  // (Rules -> Redirect Rules): www.sneat.club/* -> https://sneat.club/<path> (301),
-  // which runs at the edge before origin. www is deliberately NOT a worker
-  // route here: attaching www as a second custom domain conflicts with a
-  // proxied www record (error 100117). The worker owns the apex only.
+  // Assets-only: NO Worker script. Every request is answered by Cloudflare static
+  // assets (free, never counted against the Workers request quota). A path with a
+  // file gets that file; any other path gets dist/index.html (200, URL kept), which
+  // is the Angular app shell (see scripts/assemble-app.mjs), so /app/* deep links
+  // boot the app. public/_redirects rewrites exactly `/` to the landing home
+  // (dist/landing.html) and holds /register -> /app/register.
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS",
-    "run_worker_first": true,
-    "not_found_handling": "none"
+    "not_found_handling": "single-page-application"
   },
+  // www -> apex is handled by a zone-level Cloudflare **Redirect Rule**
+  // (Rules -> Redirect Rules): www.sneat.club/* -> https://sneat.club/<path> (301),
+  // which runs at the edge before origin. www is deliberately NOT a route
+  // here: attaching www as a second custom domain conflicts with a
+  // proxied www record (error 100117). The worker owns the apex only.
+  //
+  // Firebase Auth's `/__/*` is NOT served here: a more-specific zone route
+  // `sneat.club/__/*` runs BEFORE this Custom Domain and sends those paths to the
+  // shared `sneat-firebase-auth-proxy` Worker. Keep `/__` out of _redirects.
+  //
   // sneat.club is attached to this worker as a Cloudflare **Custom Domain**
   // (Cloudflare manages the proxied DNS record + TLS cert). Creating/attaching
   // a custom domain requires the deploy token to carry Zone:DNS:Edit for the
