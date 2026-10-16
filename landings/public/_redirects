@@ -1,0 +1,25 @@
+# sneat.club routing, served by Cloudflare Workers static assets with NO Worker
+# script (wrangler.jsonc has no `main`). Rules are first-match and run BEFORE
+# assets, so never add a splat that could shadow a real file (a `/app/* -> shell`
+# rewrite would shadow the app's JS/CSS).
+#
+#   /                     -> landing home (dist/landing.html, rewrite below)
+#   any path with a file  -> that file (landing pages, /app/* assets, ...)
+#   any other path        -> dist/index.html (Angular app shell), 200, URL kept
+#                            (assets.not_found_handling = single-page-application)
+#
+# `/__/*` (Firebase Auth handler) must NEVER be listed here: zone routes send it to
+# the sneat-firebase-auth-proxy Worker before this deployment is reached.
+# www -> apex is a zone Redirect Rule, not this file.
+
+# dist/index.html is the app shell (the SPA fallback); the landing owns `/`.
+# The rewrite target is `/landing`, not `/landing.html` (that answers 307).
+/            /landing         200
+/landing     /                301
+
+# Registration lives in the Angular app (sneat-specs decision 0006).
+/register    /app/register    301
+/register/   /app/register    301
+
+# Bare /app -> /app/ so the SPA's <base href="/app/"> resolves its assets.
+/app         /app/            301
