@@ -302,7 +302,6 @@ export class RegisterSignInPageComponent {
       .ensureUserRecord({
         email: user?.email,
         emailVerified: user?.emailVerified,
-        providerId: user?.providerId ?? undefined,
         displayName: user?.displayName,
       })
       .pipe(

@@ -6,7 +6,6 @@ import { Observable, map } from 'rxjs';
 export interface IAuthUserSnapshot {
   readonly email?: string | null;
   readonly emailVerified?: boolean;
-  readonly providerId?: string;
   readonly displayName?: string | null;
 }
 
@@ -96,6 +95,10 @@ export class SpaceRegistrationService {
    * accounts — whose first ever API call is register_space, which requires
    * the record and 500s without it. So the wizard creates it explicitly,
    * right before registering. The endpoint is idempotent (create-if-missing).
+   *
+   * No authProvider is sent: the server derives the account from the verified
+   * token, and Firebase reports providerId "firebase" for an account with
+   * several linked providers, which the endpoint rejects with 400.
    */
   public ensureUserRecord(user: IAuthUserSnapshot): Observable<unknown> {
     if (this.userRecordEnsured) {
@@ -107,7 +110,6 @@ export class SpaceRegistrationService {
     const request: Record<string, unknown> = {
       email: user.email || undefined,
       emailIsVerified: user.emailVerified ?? false,
-      authProvider: user.providerId || undefined,
     };
     if (user.displayName) {
       request['names'] = { fullName: user.displayName };
