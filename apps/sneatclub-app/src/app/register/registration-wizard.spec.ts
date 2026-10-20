@@ -100,7 +100,7 @@ function setupSignIn(options?: {
   const authState = {
     authStatus: new BehaviorSubject(options?.authenticated ? 'authenticated' : 'notAuthenticated'),
     authUser: new BehaviorSubject(
-      options?.authenticated ? { displayName: 'Alex', email: 'a@b.c', uid: 'u1' } : undefined,
+      options?.authenticated ? { displayName: 'Alex', email: 'a@b.c', uid: 'u1', providerId: 'firebase' } : undefined,
     ),
     signInWith: () => Promise.resolve(undefined),
     fbAuth: {},
@@ -154,6 +154,12 @@ describe('RegisterSignInPageComponent', () => {
     expect(endpoints.indexOf('users/init_user_record')).toBeLessThan(
       endpoints.indexOf('spaces/register_space'),
     );
+    // Firebase reports providerId "firebase" for an account with several linked
+    // providers, which init_user_record rejects with 400. The wizard must not
+    // forward it (the server derives the provider from the verified token).
+    const initUserRecord = calls.find((c) => c.endpoint === 'users/init_user_record');
+    expect(initUserRecord?.body).not.toHaveProperty('authProvider');
+    expect(initUserRecord?.body['email']).toBe('a@b.c');
     const register = calls.find((c) => c.endpoint === 'spaces/register_space');
     expect(register?.body['extensionID']).toBe('sneatclub');
     expect(register?.body['requestID']).toBe('sneatclub-club-11111111-2222-3333-4444-555555555555');
