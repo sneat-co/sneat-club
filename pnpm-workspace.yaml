@@ -9,7 +9,7 @@ overrides:
   '@angular/core': 22.1.3
   '@angular/forms': 22.1.3
   '@angular/platform-browser': 22.1.3
-  '@angular/router': 22.1.3
+  '@angular/router': 22.2.1
   # @angular/fire is gone from this repo entirely (sneat-libs 0.27.0 dropped it
   # fleet-wide; the platform-browser-dynamic peer it used to drag in went with
   # it). This app bootstraps zoneless via bootstrapApplication and never
