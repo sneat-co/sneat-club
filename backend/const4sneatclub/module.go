@@ -12,9 +12,9 @@ import (
 // SpaceDbo.Modules, used as the space-module key under /spaces/{id}/ext/.
 const ExtensionID = "sneatclub"
 
-// SlugNamespace is the slugs namespace Sneat Club claims public club URLs in,
+// SlugKind is the slugs namespace Sneat Club claims public club URLs in,
 // e.g. sneat.club/c/limerick-celtics.
-const SlugNamespace = "sneatclub:space"
+const SlugKind = "space"
 
 // SpaceRegistrationProfile declares what registering a sports club means.
 //
@@ -53,8 +53,8 @@ const SlugNamespace = "sneatclub:space"
 // SpaceDbo.Modules — which is why the marker, not the type, is what says what a
 // Space is for. See sneat-specs decision 0006.
 var SpaceRegistrationProfile = extension.SpaceRegistrationProfile{
-	SpaceType:     coretypes.SpaceTypeClub,
-	SlugNamespace: SlugNamespace,
+	SpaceType: coretypes.SpaceTypeClub,
+	SlugKind:  SlugKind,
 }
 
 // KnownHosts are the public hosts Sneat Club serves from; their origins must be
