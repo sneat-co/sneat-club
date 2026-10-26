@@ -60,8 +60,8 @@ func TestExtension_DeclaresSpaceProfile(t *testing.T) {
 	if !ok {
 		t.Fatal("the platform registry has no profile for sneatclub")
 	}
-	if fromRegistry.SlugNamespace != SlugNamespace {
-		t.Errorf("registry SlugNamespace = %q, want %q", fromRegistry.SlugNamespace, SlugNamespace)
+	if fromRegistry.SlugKind != SlugKind {
+		t.Errorf("registry SlugKind = %q, want %q", fromRegistry.SlugKind, SlugKind)
 	}
 }
 
