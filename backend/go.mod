@@ -4,7 +4,7 @@ go 1.26.0
 
 toolchain go1.27.3
 
-require github.com/sneat-co/sneat-go-core v0.71.15-0.20261026093600-b44672c91bb3
+require github.com/sneat-co/sneat-go-core v0.72.0
 
 require (
 	github.com/RoaringBitmap/roaring/v2 v2.29.0 // indirect
