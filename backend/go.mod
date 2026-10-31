@@ -4,12 +4,12 @@ go 1.26.0
 
 toolchain go1.27.3
 
-require github.com/sneat-co/sneat-go-core v0.73.3
+require github.com/sneat-co/sneat-go-core v0.74.1
 
 require (
 	github.com/RoaringBitmap/roaring/v2 v2.30.0 // indirect
 	github.com/bits-and-blooms/bitset v1.24.6 // indirect
-	github.com/dal-go/dalgo v0.95.4 // indirect
+	github.com/dal-go/dalgo v0.95.5 // indirect
 	github.com/dal-go/record v0.1.5 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/strongo/analytics v0.2.12 // indirect
