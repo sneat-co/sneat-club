@@ -10,6 +10,7 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  jsonLd?: Record<string, unknown>[];
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   description =
     "Free club management software for community sports clubs: teams, rosters, memberships, registration, schedules, communication and attendance in one home — plus a members' mobile app (Sneat.app) — with live scoring, competitions, bookings and payments plugged in, not rebuilt. Privacy-first. Part of the Sneat platform.",
   image = "/favicon.svg",
+  jsonLd = [],
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -54,6 +56,7 @@ const siteName = "Sneat Club";
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
+    {jsonLd.map((item) => <script type="application/ld+json" is:inline set:html={JSON.stringify(item).replace(/</g, "\\u003c")} />)}
 
     <GoogleAnalytics id={gaMeasurementId} />
   </head>

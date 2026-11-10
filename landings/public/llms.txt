@@ -1,0 +1,9 @@
+# Sneat Club
+
+Sneat Club is a home for community sports clubs, teams and members. Club management is being built on the Sneat platform, with specialist sports services alongside it.
+
+- Product overview: https://sneat.club/
+- Sports guides: https://sneat.club/sports/
+- App preview: https://sneat.club/preview/
+- Tech stack: https://sneat.club/about/tech-stack/
+- Source: https://github.com/sneat-co/sneat-club
