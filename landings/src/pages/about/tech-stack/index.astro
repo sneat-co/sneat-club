@@ -1,0 +1,68 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+const url = "https://sneat.club/about/tech-stack/";
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "Sneat Club tech stack",
+    url,
+    description: "How Sneat Club uses Astro, Angular, Ionic, Go and Cloudflare to bring teams, rosters and members into one club space.",
+    isPartOf: { "@type": "WebSite", name: "Sneat Club", url: "https://sneat.club/" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Sneat Club", item: "https://sneat.club/" },
+      { "@type": "ListItem", position: 2, name: "Tech stack", item: url },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Tech stack | Sneat Club"
+  description="See how Sneat Club uses Astro, Angular, Ionic, Go and Cloudflare to give community sports clubs one home for teams, seasons, rosters and members."
+  jsonLd={jsonLd}
+>
+  <section class="section intro">
+    <div class="container narrow">
+      <p class="eyebrow">About Sneat Club</p>
+      <h1>The technology behind the clubhouse</h1>
+      <p class="lede">A club needs one place for its seasons, teams and people. Sneat Club uses a shared platform so a roster can be part of the club's ongoing story, rather than another spreadsheet to rebuild each week.</p>
+    </div>
+  </section>
+
+  <section class="section soft" aria-labelledby="site-heading">
+    <div class="container narrow">
+      <h2 id="site-heading">A clear public entrance</h2>
+      <p><a href="https://astro.build/">Astro</a> builds this site, including the <a href="/sports/">sport guides</a> and club overview. Those pages explain how the club, its members and specialist sports services fit together before anyone signs in.</p>
+      <p>After that, the app uses <a href="https://angular.dev/">Angular</a> and <a href="https://ionicframework.com/">Ionic</a>. Shared Sneat components help the member, coach and organiser experiences use familiar controls across screens.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="platform-heading">
+    <div class="container narrow">
+      <h2 id="platform-heading">Club records at the centre</h2>
+      <p>Go backend services support the club's data and workflows. The club owns its teams, seasons, rosters, roles and members; scoring, competitions and bookings have their own specialist places in the <a href="/#platform">sports ecosystem</a>. This structure lets those experiences connect without making a club enter its people again.</p>
+      <p>The Astro pages and app build deploy together through <a href="https://developers.cloudflare.com/workers/static-assets/">Cloudflare Workers static assets</a>. A real page is served at this address, while app routes can open the signed-in experience.</p>
+    </div>
+  </section>
+
+  <section class="section soft" aria-labelledby="next-heading">
+    <div class="container narrow">
+      <h2 id="next-heading">See what the stack supports</h2>
+      <p>Explore <a href="/preview/">the app preview</a>, <a href="/sports/">find your sport</a>, or <a href="https://github.com/sneat-co/sneat-club">browse the source on GitHub</a>. The club roadmap is visible on the <a href="/#roadmap">home page</a>.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .narrow { max-width: 800px; }
+  .intro { padding-block: var(--space-5); }
+  .lede { font-size: 1.2rem; line-height: 1.7; }
+  h2 { margin-bottom: var(--space-2); }
+  p:last-child { margin-bottom: 0; }
+</style>
